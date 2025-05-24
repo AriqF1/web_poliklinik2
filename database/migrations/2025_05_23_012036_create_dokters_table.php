@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('alamat');
             $table->string('no_hp');
-            $table->foreignId('poli_id')->nullable()->constrained('polis')->onDelete('set null');
+            $table->foreignId('id_poli')->nullable()->constrained('polis')->onDelete('set null');
             $table->timestamps();
         });
     }
