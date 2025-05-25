@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('dokters', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
             $table->string('alamat');
             $table->string('no_hp');
-            $table->foreignId('id_poli')->nullable()->constrained('polis')->onDelete('set null');
+            $table->foreignId('poli_id')->nullable()->constrained('polis')->onDelete('set null');
             $table->timestamps();
         });
     }
