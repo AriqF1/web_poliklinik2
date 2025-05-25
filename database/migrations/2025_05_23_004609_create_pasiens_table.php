@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('pasiens', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('name');
             $table->string('alamat');
             $table->string('no_ktp')->unique();
             $table->string('no_hp', 50)->unique();
