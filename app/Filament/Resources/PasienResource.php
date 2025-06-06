@@ -49,10 +49,6 @@ class PasienResource extends Resource
                     ->tel()
                     ->required()
                     ->maxLength(15),
-                Forms\Components\TextInput::make('no_rm')
-                    ->required()
-                    ->unique(Pasien::class, 'no_rm', fn($record) => $record)
-                    ->maxLength(25),
             ])->columns(2);
     }
 
@@ -60,39 +56,51 @@ class PasienResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
-                    ->sortable()
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('user.name')
+                    ->label('Nama')
                     ->sortable()
                     ->searchable(),
+
                 Tables\Columns\TextColumn::make('user.email')
+                    ->label('Email')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('alamat')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('no_ktp')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('no_hp')
-                    ->sortable()
-                    ->searchable(),
+
                 Tables\Columns\TextColumn::make('no_rm')
+                    ->label('No. RM')
                     ->sortable()
                     ->searchable(),
-            ])->filters([
-                //
-            ])->actions([
-                //
-            ])->bulkActions([
-                //
+
+                Tables\Columns\TextColumn::make('no_ktp')
+                    ->label('No. KTP')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(),
+
+                Tables\Columns\TextColumn::make('no_hp')
+                    ->label('No. HP')
+                    ->formatStateUsing(fn($state) => '+62 ' . ltrim($state, '0'))
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('alamat')
+                    ->label('Alamat')
+                    ->limit(30)
+                    ->wrap()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('created_at', 'desc')
+            ->emptyStateHeading('Belum ada pasien')
+            ->emptyStateDescription('Klik tombol "Tambah Pasien" untuk menambahkan data baru.')
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
