@@ -18,8 +18,12 @@ class PasienResource extends Resource
 {
     protected static ?string $model = Pasien::class;
     protected ?Pasien $record = null;
+    protected static ?string $navigationGroup = 'Pengguna';
+    protected static ?string $navigationLabel = 'Pasien';
+    protected static ?string $title = 'Daftar Pasien';
+    protected static ?string $label = 'Pasien';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-user';
 
     public static function form(Form $form): Form
     {
@@ -99,14 +103,14 @@ class PasienResource extends Resource
             ->emptyStateHeading('Belum ada pasien')
             ->emptyStateDescription('Klik tombol "Tambah Pasien" untuk menambahkan data baru.')
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateDescription('Silakan tambahkan pasien baru untuk memulai.');
     }
 
     public static function getRelations(): array
@@ -123,6 +127,10 @@ class PasienResource extends Resource
             'create' => Pages\CreatePasien::route('/create'),
             'edit' => Pages\EditPasien::route('/{record}/edit'),
         ];
+    }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 
     public function mutateFormDataBeforeSave(array $data): array
