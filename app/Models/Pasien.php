@@ -8,6 +8,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pasien extends Model
 {
+    protected static function booted()
+    {
+        static::creating(function ($pasien) {
+            $ktpExists = self::where('no_ktp', $pasien->no_ktp)->exists();
+
+            if (! $ktpExists) {
+                $yearMonth = now()->format('Ym');
+                $total = self::count() + 1;
+                $pasien->no_rm = $yearMonth . '-' . $total;
+            }
+        });
+    }
     protected $fillable = [
         'user_id',
         'alamat',
