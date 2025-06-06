@@ -12,81 +12,117 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Card;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Tables\Columns\TextColumn;
+use Illuminate\Validation\Rule;
 
 class DokterResource extends Resource
 {
     protected static ?string $model = Dokter::class;
     protected ?Dokter $record = null;
+    protected static ?string $navigationGroup = 'Pengguna';
+    protected static ?string $navigationLabel = 'Dokter';
+    protected static ?string $title = 'Daftar Dokter';
+    protected static ?string $label = 'Dokter';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-s-user';
+
+
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user.name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('user.email')
-                    ->email()
-                    ->required()
-                    ->unique(Dokter::class, 'email', fn($record) => $record)
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('user.password')
-                    ->password()
-                    ->minLength(8)
-                    ->dehydrateStateUsing(fn($state) => bcrypt($state))
-                    ->required(),
-                Forms\Components\TextInput::make('alamat')
-                    ->required()
-                    ->maxLength(100),
-                Forms\Components\TextInput::make('no_hp')
-                    ->tel()
-                    ->required()
-                    ->maxLength(15),
-                Forms\Components\Select::make('poli_id')
-                    ->required()
-                    ->options(
-                        \App\Models\Poli::all()->pluck('nama_poli', 'id')
-                    )
-                    ->searchable()
-            ])->columns(2);
+                Card::make()
+                    ->columns(2)
+                    ->schema([
+                        Forms\Components\TextInput::make('user.name')
+                            ->label('Nama Dokter')
+                            ->helperText('Masukkan nama lengkap dokter')
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('user.email')
+                            ->label('Email')
+                            ->helperText('Email yang digunakan untuk login')
+                            ->email()
+                            ->required()
+                            ->maxLength(255),
+
+                        Forms\Components\TextInput::make('user.password')
+                            ->label('Password')
+                            ->helperText('Minimal 8 karakter')
+                            ->password()
+                            ->minLength(8)
+                            ->dehydrateStateUsing(fn($state) => bcrypt($state))
+                            ->required()
+                            ->visible(fn($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
+
+                        Forms\Components\TextInput::make('alamat')
+                            ->label('Alamat')
+                            ->helperText('Masukkan alamat tempat tinggal dokter')
+                            ->required()
+                            ->columnSpan(2),
+
+                        Forms\Components\TextInput::make('no_hp')
+                            ->label('No. HP')
+                            ->helperText('Nomor telepon aktif')
+                            ->tel()
+                            ->required()
+                            ->maxLength(15),
+
+                        Forms\Components\Select::make('poli_id')
+                            ->label('Poli')
+                            ->helperText('Pilih poli tempat dokter bertugas')
+                            ->required()
+                            ->relationship('poli', 'nama_poli')
+                    ])
+            ]);
     }
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id')
+                TextColumn::make('user.name')
+                    ->label('Nama')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.name')
+
+                TextColumn::make('user.email')
+                    ->label('Email')
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('user.email')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('alamat')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('no_hp')
-                    ->sortable()
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('poli.nama_poli')
+
+                TextColumn::make('alamat')
+                    ->label('Alamat')
+                    ->limit(30)
+                    ->wrap(),
+
+                TextColumn::make('no_hp')
+                    ->label('Nomor HP')
+                    ->formatStateUsing(fn($state) => '+62 ' . ltrim($state, '0'))
+                    ->sortable(),
+
+                BadgeColumn::make('poli.nama_poli')
                     ->label('Poli')
+                    ->color('info')
+                    ->sortable(),
+
+                TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y')
                     ->sortable()
-            ])->filters([
-                //
-            ])->actions([
-                //
-            ])->bulkActions([
-                //
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('created_at', 'desc')
+            ->emptyStateHeading('Belum ada dokter')
+            ->emptyStateDescription('Klik tombol "Tambah Dokter" untuk mulai menambahkan data.')
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -110,19 +146,8 @@ class DokterResource extends Resource
             'edit' => Pages\EditDokter::route('/{record}/edit'),
         ];
     }
-
-    public function mutateFormDataBeforeSave(array $data): array
+    public static function getNavigationBadge(): ?string
     {
-        $userData = $data['user'] ?? [];
-        unset($data['user']);
-
-        if ($this->record) {
-            $this->record->user()->update($userData);
-        } else {
-            $user = \App\Models\User::create($userData + ['role' => 'dokter']);
-            $data['user_id'] = $user->id;
-        }
-
-        return $data;
+        return static::getModel()::count();
     }
 }
