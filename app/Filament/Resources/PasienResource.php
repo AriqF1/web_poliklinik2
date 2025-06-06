@@ -132,19 +132,4 @@ class PasienResource extends Resource
     {
         return static::getModel()::count();
     }
-
-    public function mutateFormDataBeforeSave(array $data): array
-    {
-        $userData = $data['user'] ?? [];
-        unset($data['user']);
-
-        if ($this->record) {
-            $this->record->user()->update($userData);
-        } else {
-            $user = \App\Models\User::create($userData + ['role' => 'pasien']);
-            $data['user_id'] = $user->id;
-        }
-
-        return $data;
-    }
 }
