@@ -146,4 +146,8 @@ class DokterResource extends Resource
             'edit' => Pages\EditDokter::route('/{record}/edit'),
         ];
     }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
 }
