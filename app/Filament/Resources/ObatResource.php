@@ -16,6 +16,10 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ObatResource extends Resource
 {
     protected static ?string $model = Obat::class;
+    protected static ?string $navigationGroup = 'Penyimpanan';
+    protected static ?string $navigationLabel = 'Obat';
+    protected static ?string $title = 'Daftar Obat';
+
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -24,9 +28,11 @@ class ObatResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('nama_obat')
+                    ->helperText('Masukkan nama obat yang akan didaftarkan')
                     ->required()
                     ->maxLength(50),
                 Forms\Components\TextInput::make('kemasan')
+                    ->helperText('Masukkan kemasan obat, misal: tablet, kapsul, sirup')
                     ->required()
                     ->maxLength(35),
             ]);
@@ -59,7 +65,8 @@ class ObatResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->emptyStateDescription('Silakan tambahkan obat baru untuk memulai.');
     }
 
     public static function getRelations(): array
@@ -76,5 +83,9 @@ class ObatResource extends Resource
             'create' => Pages\CreateObat::route('/create'),
             'edit' => Pages\EditObat::route('/{record}/edit'),
         ];
+    }
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
     }
 }
