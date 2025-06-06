@@ -146,30 +146,4 @@ class DokterResource extends Resource
             'edit' => Pages\EditDokter::route('/{record}/edit'),
         ];
     }
-
-    public function mutateFormDataBeforeSave(array $data): array
-    {
-        $userData = $data['user'] ?? [];
-        unset($data['user']);
-
-        if ($this->record) {
-            $user = $this->record->user;
-
-            // Validasi email unik saat update
-            validator($userData, [
-                'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            ])->validate();
-
-            // Update user (password hanya jika diisi)
-            if (!empty($userData['password'])) {
-                $userData['password'] = bcrypt($userData['password']);
-            } else {
-                unset($userData['password']);
-            }
-
-            $user->update($userData);
-        }
-
-        return $data;
-    }
 }
