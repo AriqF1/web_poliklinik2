@@ -27,7 +27,7 @@
             <div class="input-group">
                 <span class="input-group-text"><i class="fas fa-lock"></i></span>
                 <input type="password" class="form-control" id="login-password" name="password"
-                    placeholder="Masukkan Password" value="{{ old('password') }}" required>
+                    placeholder="Masukkan Password" required>
             </div>
         </div>
 
