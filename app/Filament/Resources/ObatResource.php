@@ -35,6 +35,12 @@ class ObatResource extends Resource
                     ->helperText('Masukkan kemasan obat, misal: tablet, kapsul, sirup')
                     ->required()
                     ->maxLength(35),
+                Forms\Components\TextInput::make('harga')
+                    ->helperText('Masukkan harga obat dalam satuan rupiah')
+                    ->numeric()
+                    ->required()
+                    ->minValue(0)
+                    ->default(0),
             ]);
     }
 
@@ -46,6 +52,10 @@ class ObatResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('kemasan')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('harga')
+                    ->money('idr')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
