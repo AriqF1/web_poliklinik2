@@ -31,8 +31,6 @@ class LoginController extends Controller
             // Ambil user yang sedang login
             $user = Auth::User();
 
-            dd($user);
-
             // Cek apakah user memiliki role yang sesuai
             if ($user->role) {
                 // Redirect sesuai dengan role user
