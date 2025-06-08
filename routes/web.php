@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Dokter\DokterController;
 use App\Http\Controllers\Pasien\PasienController;
+use App\Http\Controllers\Admin\PoliController;
 
 Route::get('/', function () {
     return view('landing.welcome');
@@ -21,6 +22,7 @@ Route::prefix('pasien')
     ->middleware(['auth', 'role:pasien'])
     ->group(function () {
         Route::get('/dashboard', [PasienController::class, 'index'])->name('index');
+        Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
     });
 
 Route::prefix('dokter')
