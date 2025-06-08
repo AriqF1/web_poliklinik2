@@ -55,7 +55,6 @@ class DokterResource extends Resource
                             ->helperText('Minimal 8 karakter')
                             ->password()
                             ->minLength(8)
-                            ->dehydrateStateUsing(fn($state) => bcrypt($state))
                             ->required()
                             ->visible(fn($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
 
