@@ -28,49 +28,51 @@
 
 @section('content')
     <div class="stats-grid">
-        <div class="stat-card card-primary">
-            <div class="stat-card-header">
-                <div class="stat-icon">
-                    <i class="fa-solid fa-house-medical"></i>
+        @foreach ($polis as $poli)
+            <div class="stat-card card-primary" onclick="bukaModal('{{ $poli->id }}', '{{ $poli->nama_poli }}')"
+                style="cursor: pointer;">
+                <div class="stat-card-header">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-house-medical"></i>
+                    </div>
+                    <div class="stat-trend">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
                 </div>
-                <div class="stat-trend">
-                    <i class="fas fa-arrow-up"></i>
-                </div>
-            </div>
-            <div class="stat-content">
-                <div class="stat-value">{{ $totalPoli ?? 0 }}</div>
-                <div class="stat-label">Jumlah Poli</div>
-                <div class="stat-description">Siap melayani Anda</div>
-            </div>
-        </div>
-        <div class="stat-card card-success">
-            <div class="stat-card-header">
-                <div class="stat-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <div class="stat-trend">
-                    <i class="fas fa-clock"></i>
+                <div class="stat-content">
+                    <div class="stat-value">{{ $poli->dokter_count }}</div>
+                    <div class="stat-label">{{ $poli->nama_poli }}</div>
+                    <div class="stat-description">{{ $poli->keterangan }}</div>
                 </div>
             </div>
-            <div class="stat-content">
-                <div class="stat-value">{{ $janjiTemu ?? 0 }}</div>
-                <div class="stat-label">Janji Hari Ini</div>
-                <div class="stat-description">Jadwal konsultasi</div>
-            </div>
-        </div>
-        <div class="stat-card card-info">
-            <div class="stat-card-header">
-                <div class="stat-icon">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-                <div class="stat-trend">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-            </div>
-            <div class="stat-content">
-                <div class="stat-value">{{ $jumlahPemeriksaan ?? 0 }}</div>
-                <div class="stat-label">Pemeriksaan Selesai</div>
-                <div class="stat-description">Riwayat kesehatan</div>
+        @endforeach
+        <div id="modalPendaftaran" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="tutupModal()">&times;</span>
+                <h2>Pendaftaran Poli</h2>
+                <p>Anda akan mendaftar ke <strong id="modalNamaPoli"></strong></p>
+                <form action="{{ route('pasien.daftar-poli.store') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="poli_id" id="modalPoliId">
+
+                    <div class="form-group">
+                        <label for="id_jadwal">Pilih Jadwal:</label>
+                        <select name="id_jadwal" id="id_jadwal" required>
+                            @foreach ($jadwals as $jadwal)
+                                <option value="{{ $jadwal->id }}">
+                                    {{ $jadwal->dokter->nama }} - {{ $jadwal->hari }} ({{ $jadwal->jam_mulai }} -
+                                    {{ $jadwal->jam_selesai }})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="keluhan">Keluhan:</label>
+                        <textarea name="keluhan" id="keluhan" rows="3" required></textarea>
+                    </div>
+
+                    <button type="submit">Konfirmasi Pendaftaran</button>
+                </form>
             </div>
         </div>
     </div>
@@ -115,3 +117,42 @@
         </div>
     </div>
 @endsection
+<script>
+    function bukaModal(id, nama) {
+        document.getElementById('modalPoliId').value = id;
+        document.getElementById('modalNamaPoli').textContent = nama;
+        document.getElementById('modalPendaftaran').style.display = 'flex';
+    }
+
+    function tutupModal() {
+        document.getElementById('modalPendaftaran').style.display = 'none';
+    }
+</script>
+<style>
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        min-width: 300px;
+        max-width: 500px;
+    }
+
+    .close {
+        float: right;
+        font-size: 1.5em;
+        cursor: pointer;
+    }
+</style>
