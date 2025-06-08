@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 use App\Models\Poli;
 use Illuminate\Http\Request;
 
@@ -12,7 +15,10 @@ class PoliController extends Controller
      */
     public function index()
     {
-        //
+        $pasien = User::where('id', Auth::id())->first();
+        $poli = Poli::all();
+        $totalPoli = Poli::count();
+        return view('poli.index', compact('pasien', 'poli', 'totalPoli'));
     }
 
     /**

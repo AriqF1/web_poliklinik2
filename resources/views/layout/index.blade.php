@@ -53,11 +53,12 @@
                                 <div class="menu-indicator"></div>
                             </a> --}}
 
-                            <a href="#" class="menu-item">
+                            <a href="{{ Route('pasien.poli.index') }}"
+                                class="menu-item {{ request()->routeIs('pasien.poli.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-calendar-check"></i>
+                                    <i class="fa-solid fa-building-user"></i>
                                 </div>
-                                <span class="menu-text">Janji Temu</span>
+                                <span class="menu-text">Daftar Poli</span>
                                 <div class="menu-indicator"></div>
                             </a>
 
