@@ -51,7 +51,6 @@ class PasienResource extends Resource
                             ->placeholder('Minimal 8 karakter')
                             ->password()
                             ->minLength(8)
-                            ->dehydrateStateUsing(fn($state) => bcrypt($state))
                             ->required(),
                     ])
                     ->columns(2),
