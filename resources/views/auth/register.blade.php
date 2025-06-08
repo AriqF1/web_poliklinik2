@@ -8,7 +8,7 @@
             <label for="Nama" class="form-label">Nama</label>
             <div class="input-group">
                 <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
-                <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan nama" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama" required>
             </div>
         </div>
         <div class="form-group">
@@ -16,6 +16,14 @@
             <div class="input-group">
                 <span class="input-group-text"><i class="fa-solid fa-house"></i></span>
                 <input type="text" class="form-control" id="alamat" name="alamat" placeholder="Masukkan alamat"
+                    required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="No KTP" class="form-label">Nomor KTP</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-id-card"></i></span>
+                <input type="text" class="form-control" id="no_ktp" name="no_ktp" placeholder="Masukkan No. KTP"
                     required>
             </div>
         </div>

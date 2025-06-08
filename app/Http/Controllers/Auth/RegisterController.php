@@ -18,7 +18,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'alamat' => 'required|string|max:255',
             'no_hp' => 'required|string|max:15',
             'email' => 'required|string|email|max:255|unique:users',
@@ -30,9 +30,7 @@ class RegisterController extends Controller
 
         try {
             $user = User::create([
-                'nama' => $request->nama,
-                'alamat' => $request->alamat,
-                'no_hp' => $request->no_hp,
+                'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
                 'role' => 'pasien',
