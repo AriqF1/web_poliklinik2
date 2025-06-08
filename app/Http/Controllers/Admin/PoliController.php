@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Poli;
+use App\Models\DaftarPoli;
 use Illuminate\Http\Request;
 
 class PoliController extends Controller
@@ -16,9 +17,9 @@ class PoliController extends Controller
     public function index()
     {
         $pasien = User::where('id', Auth::id())->first();
-        $poli = Poli::all();
+        $polis = Poli::withCount('dokter')->get();
         $totalPoli = Poli::count();
-        return view('poli.index', compact('pasien', 'poli', 'totalPoli'));
+        return view('poli.index', compact('pasien', 'polis', 'totalPoli'));
     }
 
     /**
@@ -34,7 +35,23 @@ class PoliController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_jadwal' => 'required|exists:jadwal_periksa,id',
+            'keluhan' => 'required|string',
+        ]);
+
+        $idPasien = Auth::user()->pasien->id;
+
+        $jumlahPendaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
+        $noAntrian = $jumlahPendaftar + 1;
+
+        DaftarPoli::create([
+            'id_pasien' => $idPasien,
+            'id_jadwal' => $request->id_jadwal,
+            'keluhan' => $request->keluhan,
+            'no_antrian' => $noAntrian,
+        ]);
+        return redirect()->back()->with('success', 'Berhasil mendaftar ke poli.');
     }
 
     /**

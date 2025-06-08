@@ -23,6 +23,7 @@ Route::prefix('pasien')
     ->group(function () {
         Route::get('/dashboard', [PasienController::class, 'index'])->name('index');
         Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
+        Route::post('/poli/daftar-poli', [PoliController::class, 'store'])->name('daftar-poli.store');
     });
 
 Route::prefix('dokter')
