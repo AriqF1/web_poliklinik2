@@ -51,10 +51,9 @@
                 <span class="close" onclick="tutupModal()">&times;</span>
                 <h2>Pendaftaran Poli</h2>
                 <p>Anda akan mendaftar ke <strong id="modalNamaPoli"></strong></p>
-                <form action="{{ route('pasien.daftar-poli.store') }}" method="POST">
+                <form action="{{ route('pasien.poli.daftar-poli.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="poli_id" id="modalPoliId">
-
                     <div class="form-group">
                         <label for="id_jadwal">Pilih Jadwal:</label>
                         <select name="id_jadwal" id="id_jadwal" required>
