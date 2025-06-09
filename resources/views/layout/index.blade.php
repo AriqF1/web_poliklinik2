@@ -5,120 +5,307 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title')</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style-create.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    @stack('styles')
 </head>
 
 <body>
-    <div class="container">
+    <div class="app-container">
         <!-- Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             @if (auth()->check())
                 @if (auth()->user()->role === 'pasien')
                     <div class="sidebar-header">
                         <div class="sidebar-brand">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>PoliCare</span>
+                            <div class="brand-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="brand-text">
+                                <span class="brand-name">PoliCare</span>
+                                <span class="brand-subtitle">Patient Portal</span>
+                            </div>
                         </div>
+                        <button class="sidebar-toggle" id="sidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
                     </div>
                     <div class="sidebar-menu">
-                        <a href="{{ Route('pasien.index') }}"
-                            class="menu-item {{ request()->routeIs('pasien.index') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Dashboard</span>
-                        </a>
-                        {{-- <a href="{{ Route('pasien.periksa') }}"
-                            class="menu-item {{ request()->routeIs('pasien.periksa') ? 'active' : '' }}">
-                            <i class="fas fa-stethoscope"></i>
-                            <span>Periksa</span>
-                        </a>
-                        <a href="#" class="menu-item"
-                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                            <i class="nav-icon fas fa-arrow-right-from-bracket"></i>
-                            <p>Logout</p>
-                        </a>
-                        <form id="logout-form" action="{{ route('pasien.logout') }}" method="POST"
-                            style="display: none;">
-                            @csrf
-                        </form> --}}
+                        <div class="menu-section">
+                            <div class="menu-section-title">Menu Utama</div>
+                            <a href="{{ Route('pasien.index') }}"
+                                class="menu-item {{ request()->routeIs('pasien.index') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <span class="menu-text">Dashboard</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+
+                            {{-- <a href="{{ Route('pasien.periksa') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('pasien.periksa') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
+                                <span class="menu-text">Periksa</span>
+                                <div class="menu-indicator"></div>
+                            </a> --}}
+
+                            <a href="{{ Route('pasien.poli.index') }}"
+                                class="menu-item {{ request()->routeIs('pasien.poli.index') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fa-solid fa-building-user"></i>
+                                </div>
+                                <span class="menu-text">Daftar Poli</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+
+                            <a href="#" class="menu-item">
+                                <div class="menu-icon">
+                                    <i class="fas fa-history"></i>
+                                </div>
+                                <span class="menu-text">Riwayat</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+                        </div>
+
+                        <div class="menu-section">
+                            <div class="menu-section-title">Akun</div>
+                            <a href="#" class="menu-item">
+                                <div class="menu-icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <span class="menu-text">Profil</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+
+                            <a href="#" class="menu-item logout-item"
+                                onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+                                <div class="menu-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <span class="menu-text">Logout</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+                            {{-- <form id="logout-form" action="{{ route('pasien.logout') ?? '#' }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                            </form> --}}
+                        </div>
                     </div>
                 @elseif(auth()->user()->role === 'dokter')
                     <div class="sidebar-header">
                         <div class="sidebar-brand">
-                            <i class="fas fa-heartbeat"></i>
-                            <span>PoliCare</span>
+                            <div class="brand-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <div class="brand-text">
+                                <span class="brand-name">PoliCare</span>
+                                <span class="brand-subtitle">Doctor Portal</span>
+                            </div>
                         </div>
+                        <button class="sidebar-toggle" id="sidebarToggle">
+                            <i class="fas fa-bars"></i>
+                        </button>
                     </div>
                     <div class="sidebar-menu">
-                        <a href="{{ Route('dokter.index') }}"
-                            class="menu-item {{ request()->routeIs('dokter.index') ? 'active' : '' }}">
-                            <i class="fas fa-chart-line"></i>
-                            <span>Dashboard</span>
-                        </a>
-                        {{-- <a href="{{ Route('dokter.memeriksa') }}"
-                            class="menu-item {{ request()->routeIs('dokter.memeriksa') ? 'active' : '' }}">
-                            <i class="fas fa-stethoscope"></i>
-                            <span>Memeriksa</span>
-                        </a>
-                        <a href="{{ Route('dokter.obat') }}"
-                            class="menu-item {{ request()->routeIs('dokter.obat') ? 'active' : '' }}">
-                            <i class="fas fa-pills"></i>
-                            <span>Obat</span>
-                        </a>
-                        <a href="#" class="menu-item"
-                            onclick="event.preventDefault();document.getElementById('logout-form').submit();">
-                            <i class="nav-icon fas fa-arrow-right-from-bracket"></i>
-                            <p>Logout</p>
-                        </a>
+                        <div class="menu-section">
+                            <div class="menu-section-title">Menu Utama</div>
+                            <a href="{{ Route('dokter.index') }}"
+                                class="menu-item {{ request()->routeIs('dokter.index') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <span class="menu-text">Dashboard</span>
+                                <div class="menu-indicator"></div>
+                            </a>
 
-                        <!-- Hidden Logout Form -->
-                        <form id="logout-form" action="{{ route('dokter.logout') }}" method="POST"
-                            style="display: none;">
-                            @csrf
-                        </form> --}}
+                            {{-- <a href="{{ Route('dokter.memeriksa') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('dokter.memeriksa') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fas fa-stethoscope"></i>
+                                </div>
+                                <span class="menu-text">Memeriksa</span>
+                                <div class="menu-indicator"></div>
+                            </a> --}}
+
+                            {{-- <a href="{{ Route('dokter.obat') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('dokter.obat') ? 'active' : '' }}">
+                                <div class="menu-icon">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <span class="menu-text">Obat</span>
+                                <div class="menu-indicator"></div>
+                            </a> --}}
+
+                            <a href="#" class="menu-item">
+                                <div class="menu-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <span class="menu-text">Pasien</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+                        </div>
+
+                        <div class="menu-section">
+                            <div class="menu-section-title">Akun</div>
+                            <a href="#" class="menu-item">
+                                <div class="menu-icon">
+                                    <i class="fas fa-user-cog"></i>
+                                </div>
+                                <span class="menu-text">Profil</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+
+                            <a href="#" class="menu-item logout-item"
+                                onclick="event.preventDefault();document.getElementById('logout-form-dokter').submit();">
+                                <div class="menu-icon">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                </div>
+                                <span class="menu-text">Logout</span>
+                                <div class="menu-indicator"></div>
+                            </a>
+                            {{-- <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                            </form> --}}
+                        </div>
                     </div>
                 @endif
             @endif
         </div>
 
-
         <!-- Main Content -->
-        <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                @yield('header')
-            </div>
-            <!-- Dashboard Cards -->
-            @php
-                $showTables = $showTables ?? true;
-                $showFullscreen = $showFullscreen ?? false;
-            @endphp
-
-            <div class="dashboard-cards">
-                @yield('content')
-            </div>
-
-            @if ($showTables)
-                <div class="dashboard-tables">
-                    <div class="table-container">
-                        @yield('table')
-                    </div>
-                    <div class="table-container">
-                        @yield('schedule')
+        <div class="main-content" id="mainContent">
+            <!-- Top Navigation Bar -->
+            <div class="top-navbar">
+                <div class="navbar-left">
+                    <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-item">@yield('dashboard', 'Dashboard')</span>
                     </div>
                 </div>
-            @endif
 
-            @if ($showFullscreen)
-                <div class="fullscreen-content">
-                    @yield('fullscreen')
+                <div class="navbar-right">
+                    <div class="navbar-notifications">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                    </div>
                 </div>
-            @endif
+            </div>
 
-            <!-- Dashboard Tables -->
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Header Section -->
+                <div class="content-header">
+                    @yield('header')
+                </div>
+
+                <!-- Main Dashboard Content -->
+                @php
+                    $showTables = $showTables ?? true;
+                    $showFullscreen = $showFullscreen ?? false;
+                @endphp
+
+                <div class="dashboard-content">
+                    @yield('content')
+                </div>
+
+                <!-- Announcement Section -->
+                <div class="dashboard-announcement">
+                    @yield('announcement')
+                </div>
+
+                <!-- Tables Section -->
+                @if ($showTables)
+                    <div class="dashboard-tables">
+                        <div class="tables-grid">
+                            <div class="table-container">
+                                @yield('table')
+                            </div>
+                            <div class="table-container">
+                                @yield('schedule')
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Fullscreen Section -->
+                @if ($showFullscreen)
+                    <div class="fullscreen-content">
+                        @yield('fullscreen')
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <script>
+        // Sidebar functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            // Desktop sidebar toggle
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('collapsed');
+                    mainContent.classList.toggle('sidebar-collapsed');
+                });
+            }
+
+            // Mobile sidebar toggle
+            if (mobileSidebarToggle) {
+                mobileSidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('mobile-open');
+                    sidebarOverlay.classList.toggle('active');
+                    document.body.classList.toggle('sidebar-mobile-open');
+                });
+            }
+
+            // Close mobile sidebar when clicking overlay
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('mobile-open');
+                sidebarOverlay.classList.remove('active');
+                document.body.classList.remove('sidebar-mobile-open');
+            });
+
+            // Close mobile sidebar when clicking menu item
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('mobile-open');
+                        sidebarOverlay.classList.remove('active');
+                        document.body.classList.remove('sidebar-mobile-open');
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('mobile-open');
+                    sidebarOverlay.classList.remove('active');
+                    document.body.classList.remove('sidebar-mobile-open');
+                }
+            });
+        });
+    </script>
+
+    @stack('scripts')
 </body>
 
 </html>
