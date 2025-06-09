@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Poli;
 use App\Models\DaftarPoli;
+use App\Models\JadwalPeriksa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PoliController extends Controller
 {
@@ -19,7 +21,8 @@ class PoliController extends Controller
         $pasien = User::where('id', Auth::id())->first();
         $polis = Poli::withCount('dokter')->get();
         $totalPoli = Poli::count();
-        return view('poli.index', compact('pasien', 'polis', 'totalPoli'));
+        $jadwals = JadwalPeriksa::all();
+        return view('pasien.poli.index', compact('pasien', 'polis', 'totalPoli', 'jadwals'));
     }
 
     /**

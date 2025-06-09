@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Dokter;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class DokterController extends Controller
@@ -13,7 +15,8 @@ class DokterController extends Controller
      */
     public function index()
     {
-        return view('dokter.index');
+        $dokter = User::where('id', Auth::id())->first();
+        return view('dokter.index', compact('dokter'));
     }
 
     /**
