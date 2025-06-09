@@ -89,10 +89,10 @@
                                 <span class="menu-text">Logout</span>
                                 <div class="menu-indicator"></div>
                             </a>
-                            {{-- <form id="logout-form" action="{{ route('pasien.logout') ?? '#' }}" method="POST"
+                            <form id="logout-form" action="{{ route('pasien.logout') ?? '#' }}" method="POST"
                                 style="display: none;">
                                 @csrf
-                            </form> --}}
+                            </form>
                         </div>
                     </div>
                 @elseif(auth()->user()->role === 'dokter')
@@ -167,10 +167,10 @@
                                 <span class="menu-text">Logout</span>
                                 <div class="menu-indicator"></div>
                             </a>
-                            {{-- <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}" method="POST"
+                            <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}" method="POST"
                                 style="display: none;">
                                 @csrf
-                            </form> --}}
+                            </form>
                         </div>
                     </div>
                 @endif
