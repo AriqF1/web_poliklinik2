@@ -24,6 +24,7 @@ Route::prefix('pasien')
         Route::get('/dashboard', [PasienController::class, 'index'])->name('index');
         Route::get('/poli', [PoliController::class, 'index'])->name('poli.index');
         Route::post('/poli/daftar-poli', [PoliController::class, 'store'])->name('poli.daftar-poli.store');
+        Route::post('/logout', [LoginController::class, 'logout'])->name('logout'); // Proses logout
     });
 
 Route::prefix('dokter')
@@ -31,4 +32,5 @@ Route::prefix('dokter')
     ->middleware(['auth', 'role:dokter'])
     ->group(function () {
         Route::get('/dashboard', [DokterController::class, 'index'])->name('index');
+        Route::post('/logout', [LoginController::class, 'logout'])->name('logout'); // Proses logout
     });
