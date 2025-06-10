@@ -38,8 +38,8 @@
                         <i class="fas fa-plus"></i>
                     </div>
                     <div class="action-content">
-                        <h4>Buat Janji</h4>
-                        <p>Jadwalkan konsultasi baru</p>
+                        <h4>Buka Poli</h4>
+                        <p>Jadwalkan Poli Minggu ini</p>
                     </div>
                 </a>
 
@@ -49,7 +49,7 @@
                     </div>
                     <div class="action-content">
                         <h4>Riwayat Medis</h4>
-                        <p>Lihat rekam medis Anda</p>
+                        <p>Lihat rekam medis pasien anda</p>
                     </div>
                 </a>
 
@@ -58,7 +58,7 @@
                         <i class="fas fa-prescription-bottle"></i>
                     </div>
                     <div class="action-content">
-                        <h4>Resep Obat</h4>
+                        <h4>Lihat Obat Tersedia</h4>
                         <p>Kelola resep dan obat</p>
                     </div>
                 </a>
