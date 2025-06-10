@@ -122,14 +122,14 @@
                                 <div class="menu-indicator"></div>
                             </a>
 
-                            {{-- <a href="{{ Route('dokter.memeriksa') ?? '#' }}"
-                                class="menu-item {{ request()->routeIs('dokter.memeriksa') ? 'active' : '' }}">
+                            <a href="{{ Route('dokter.poli.index') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('dokter.poli.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
                                     <i class="fas fa-stethoscope"></i>
                                 </div>
-                                <span class="menu-text">Memeriksa</span>
+                                <span class="menu-text">Poli</span>
                                 <div class="menu-indicator"></div>
-                            </a> --}}
+                            </a>
 
                             {{-- <a href="{{ Route('dokter.obat') ?? '#' }}"
                                 class="menu-item {{ request()->routeIs('dokter.obat') ? 'active' : '' }}">
@@ -167,8 +167,8 @@
                                 <span class="menu-text">Logout</span>
                                 <div class="menu-indicator"></div>
                             </a>
-                            <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}" method="POST"
-                                style="display: none;">
+                            <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}"
+                                method="POST" style="display: none;">
                                 @csrf
                             </form>
                         </div>
