@@ -428,3 +428,91 @@
 .bg-info {
     background: linear-gradient(135deg, #9b59b6, #8e44ad);
 }
+/* Class mt-2 untuk margin top */
+.mt-2 {
+    margin-top: 0.5rem; /* 8px */
+}
+
+/* Base button styling */
+.btn {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: all 0.15s ease-in-out;
+    user-select: none;
+}
+
+/* Button success variant */
+.btn-success {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.15);
+}
+
+/* Hover effects */
+.btn-success:hover {
+    color: #fff;
+    background-color: #218838;
+    border-color: #1e7e34;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.25);
+}
+
+/* Active/pressed state */
+.btn-success:active,
+.btn-success.active {
+    color: #fff;
+    background-color: #1e7e34;
+    border-color: #1c7430;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.15);
+}
+
+/* Focus state untuk accessibility */
+.btn-success:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.25);
+}
+
+/* Disabled state */
+.btn-success:disabled,
+.btn-success.disabled {
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Styling khusus untuk button "Mulai Pemeriksaan" */
+.btn-success {
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 8px;
+    min-width: 130px;
+    letter-spacing: 0.3px;
+}
+
+/* Responsive untuk mobile */
+@media (max-width: 768px) {
+    .btn-success {
+        padding: 8px 16px;
+        font-size: 14px;
+        min-width: 140px;
+    }
+
+    .mt-2 {
+        margin-top: 0.75rem; /* Sedikit lebih besar di mobile */
+    }
+}
