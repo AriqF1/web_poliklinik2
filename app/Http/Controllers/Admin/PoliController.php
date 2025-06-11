@@ -9,7 +9,7 @@ use App\Models\Poli;
 use App\Models\DaftarPoli;
 use App\Models\JadwalPeriksa;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+
 
 class PoliController extends Controller
 {
@@ -21,7 +21,7 @@ class PoliController extends Controller
         $pasien = User::where('id', Auth::id())->first();
         $polis = Poli::withCount('dokter')->get();
         $totalPoli = Poli::count();
-        $jadwals = JadwalPeriksa::all();
+        $jadwals = JadwalPeriksa::with('dokter.user', 'dokter.poli')->get();
         return view('pasien.poli.index', compact('pasien', 'polis', 'totalPoli', 'jadwals'));
     }
 
@@ -39,11 +39,12 @@ class PoliController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_jadwal' => 'required|exists:jadwal_periksa,id',
+            'id_jadwal' => 'required|exists:jadwal_periksas,id',
             'keluhan' => 'required|string',
         ]);
 
-        $idPasien = Auth::user()->pasien->id;
+        $user = Auth::user();
+        $idPasien = $user->id;
 
         $jumlahPendaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
         $noAntrian = $jumlahPendaftar + 1;

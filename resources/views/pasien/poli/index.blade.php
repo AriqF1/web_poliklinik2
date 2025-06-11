@@ -58,9 +58,9 @@
                         <label for="id_jadwal">Pilih Jadwal:</label>
                         <select name="id_jadwal" id="id_jadwal" required>
                             @foreach ($jadwals as $jadwal)
-                                <option value="{{ $jadwal->id }}">
-                                    {{ $jadwal->dokter->nama }} - {{ $jadwal->hari }} ({{ $jadwal->jam_mulai }} -
-                                    {{ $jadwal->jam_selesai }})
+                                <option value="{{ $jadwal->id }}" data-poli-id="{{ $jadwal->dokter->poli_id ?? '' }}">
+                                    {{ $jadwal->dokter->user->name ?? 'Dokter tidak ditemukan' }} - {{ $jadwal->hari }}
+                                    ({{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }})
                                 </option>
                             @endforeach
                         </select>
@@ -116,42 +116,251 @@
         </div>
     </div>
 @endsection
+
 <script>
-    function bukaModal(id, nama) {
-        document.getElementById('modalPoliId').value = id;
-        document.getElementById('modalNamaPoli').textContent = nama;
+    function bukaModal(poliId, namaPoli) {
+        document.getElementById('modalPoliId').value = poliId;
+        document.getElementById('modalNamaPoli').innerText = namaPoli;
+
         document.getElementById('modalPendaftaran').style.display = 'flex';
+
+        const selectJadwal = document.getElementById('id_jadwal');
+        const options = selectJadwal.querySelectorAll('option');
+
+        options.forEach(option => {
+            const optionPoliId = option.getAttribute('data-poli-id');
+            if (optionPoliId === poliId) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+
+        const firstVisibleOption = Array.from(options).find(option => option.style.display === '');
+        if (firstVisibleOption) {
+            selectJadwal.value = firstVisibleOption.value;
+        } else {
+            selectJadwal.value = '';
+        }
     }
 
     function tutupModal() {
         document.getElementById('modalPendaftaran').style.display = 'none';
     }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalPendaftaran');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 </script>
 <style>
     .modal {
         position: fixed;
-        top: 0;
+        z-index: 1000;
         left: 0;
+        top: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.6);
-        display: none;
-        justify-content: center;
+        background-color: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(5px);
+        display: flex;
         align-items: center;
-        z-index: 9999;
+        justify-content: center;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
     }
 
     .modal-content {
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        min-width: 300px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 40px;
+        width: 90%;
         max-width: 500px;
+        position: relative;
+        box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.25),
+            0 0 0 1px rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
+    /* Close Button */
     .close {
-        float: right;
-        font-size: 1.5em;
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        color: #64748b;
+        font-size: 28px;
+        font-weight: bold;
         cursor: pointer;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    .close:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+        transform: scale(1.1);
+    }
+
+    /* Header */
+    h2 {
+        color: #1e293b;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .modal-content p {
+        color: #64748b;
+        margin-bottom: 30px;
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .modal-content p strong {
+        color: #7c3aed;
+        font-weight: 600;
+    }
+
+    /* Form Styles */
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .form-group {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+    }
+
+    label {
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Input Styles */
+    select,
+    textarea {
+        padding: 16px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 16px;
+        font-family: inherit;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    select:focus,
+    textarea:focus {
+        border-color: #7c3aed;
+        box-shadow:
+            0 0 0 3px rgba(124, 58, 237, 0.1),
+            0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.95);
+        transform: translateY(-2px);
+    }
+
+    select:hover,
+    textarea:hover {
+        border-color: #c7d2fe;
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    /* Select Dropdown */
+    select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+        background-position: right 16px center;
+        background-repeat: no-repeat;
+        background-size: 16px;
+        padding-right: 48px;
+    }
+
+    /* TextArea */
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+        font-family: inherit;
+    }
+
+    textarea::placeholder {
+        color: #9ca3af;
+        font-style: italic;
+    }
+
+    /* Submit Button */
+    button[type="submit"] {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 18px 32px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    button[type="submit"]:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    button[type="submit"]:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 15px 35px -5px rgba(102, 126, 234, 0.4),
+            0 5px 15px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    button[type="submit"]:hover:before {
+        left: 100%;
+    }
+
+    button[type="submit"]:active {
+        transform: translateY(-1px);
     }
 </style>
