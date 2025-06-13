@@ -33,7 +33,7 @@
                 Aksi Cepat
             </h3>
             <div class="quick-actions-grid">
-                <a href="#" class="quick-action-item">
+                <a href="{{ route('dokter.poli.index') }}" class="quick-action-item">
                     <div class="action-icon bg-primary">
                         <i class="fas fa-plus"></i>
                     </div>
