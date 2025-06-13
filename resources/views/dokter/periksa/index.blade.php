@@ -33,21 +33,23 @@
                 <i class="fas fa-clock me-2"></i>
                 Pemeriksaan
             </h3>
-            @foreach ($pasienPoli as $item)
-                <div class="activity-item" style="cursor: pointer;"
-                    onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
-                    <div class="activity-icon bg-primary">
-                        <i class="fas fa-calendar"></i>
+            <div class ="activity-list">
+                @foreach ($pasienPoli as $item)
+                    <div class="activity-item" style="cursor: pointer;"
+                        onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
+                        <div class="activity-icon bg-primary">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Nama Pasien : {{ $item->pasien->user->name }}</h4>
+                            <p>Keluhan : {{ $item->keluhan }}</p>
+                            <p>Antrian ke - {{ $item->no_antrian }}</p>
+                            <span class="activity-time">Pada {{ $item->jadwalPeriksa->hari }}
+                                ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
+                            </span>
+                        </div>
                     </div>
-                    <div class="activity-content">
-                        <h4>Nama Pasien : {{ $item->pasien->user->name }}</h4>
-                        <p>Keluhan : {{ $item->keluhan }}</p>
-                        <p>Antrian ke - {{ $item->no_antrian }}</p>
-                        <span class="activity-time">Pada {{ $item->jadwalPeriksa->hari }}
-                            ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
-                        </span>
-                    </div>
-                </div>
+            </div>
             @endforeach
         </div>
     </div>
