@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Periksa;
 use App\Models\DaftarPoli;
 use App\Models\Obat;
+use App\Models\DetailPeriksa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 
 class PeriksaController extends Controller
 {
@@ -43,7 +45,29 @@ class PeriksaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_daftar_poli' => 'required|exists:daftar_polis,id',
+            'tgl_periksa' => 'required|date',
+            'catatan' => 'required|string',
+            'obat_ids' => 'required|array|min:1',
+            'obat_ids.*' => 'exists:obats,id',
+        ]);
+
+        $periksa = Periksa::create([
+            'id_daftar_poli' => $request->id_daftar_poli,
+            'tgl_periksa' => $request->tgl_periksa,
+            'catatan' => $request->catatan,
+        ]);
+
+        // Simpan obat-obat yang dipilih ke detail_periksas
+        foreach ($request->obat_ids as $obatId) {
+            DetailPeriksa::create([
+                'id_periksa' => $periksa->id,
+                'id_obat' => $obatId,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Pemeriksaan berhasil disimpan.');
     }
 
     /**
