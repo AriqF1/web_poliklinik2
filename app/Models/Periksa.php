@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Periksa extends Model
 {
@@ -20,8 +20,8 @@ class Periksa extends Model
         return $this->belongsTo(DaftarPoli::class, 'id_daftar_poli');
     }
 
-    public function detailPeriksa(): HasOne
+    public function detailPeriksa(): HasMany
     {
-        return $this->hasOne(DetailPeriksa::class, 'id_periksa');
+        return $this->hasMany(DetailPeriksa::class, 'id_periksa');
     }
 }
