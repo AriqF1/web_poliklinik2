@@ -125,7 +125,7 @@
                             <a href="{{ Route('dokter.poli.index') ?? '#' }}"
                                 class="menu-item {{ request()->routeIs('dokter.poli.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-stethoscope"></i>
+                                    <i class="fa-solid fa-house-medical"></i>
                                 </div>
                                 <span class="menu-text">Poli</span>
                                 <div class="menu-indicator"></div>
