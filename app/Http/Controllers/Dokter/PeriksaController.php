@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Dokter;
 
+use App\Http\Controllers\Controller;
 use App\Models\Periksa;
+use App\Models\DaftarPoli;
+use App\Models\Obat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PeriksaController extends Controller
 {
@@ -12,7 +16,18 @@ class PeriksaController extends Controller
      */
     public function index()
     {
-        //
+        $dokter = Auth::user();
+        $userId = $dokter->id;
+        $obats = Obat::all();
+        $pasienPoli = DaftarPoli::with([
+            'pasien.user',
+            'jadwalPeriksa.dokter.user',
+        ])
+            ->whereHas('jadwalPeriksa.dokter', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
+        return view('dokter.periksa.index', compact('dokter', 'pasienPoli', 'obats'));
     }
 
     /**

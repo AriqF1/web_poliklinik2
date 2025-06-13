@@ -125,20 +125,20 @@
                             <a href="{{ Route('dokter.poli.index') ?? '#' }}"
                                 class="menu-item {{ request()->routeIs('dokter.poli.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-stethoscope"></i>
+                                    <i class="fa-solid fa-house-medical"></i>
                                 </div>
                                 <span class="menu-text">Poli</span>
                                 <div class="menu-indicator"></div>
                             </a>
 
-                            {{-- <a href="{{ Route('dokter.obat') ?? '#' }}"
-                                class="menu-item {{ request()->routeIs('dokter.obat') ? 'active' : '' }}">
+                            <a href="{{ Route('dokter.periksa.index') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('dokter.periksa.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-pills"></i>
+                                    <i class="fas fa-stethoscope"></i>
                                 </div>
-                                <span class="menu-text">Obat</span>
+                                <span class="menu-text">Periksa</span>
                                 <div class="menu-indicator"></div>
-                            </a> --}}
+                            </a>
 
                             <a href="#" class="menu-item">
                                 <div class="menu-icon">

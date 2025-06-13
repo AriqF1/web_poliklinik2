@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dokter;
 use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\User;
+use App\Models\DaftarPoli;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -15,8 +16,19 @@ class DokterController extends Controller
      */
     public function index()
     {
-        $dokter = User::where('id', Auth::id())->first();
-        return view('dokter.index', compact('dokter'));
+        $dokter = Auth::user();
+        $userId = $dokter->id;
+
+        $pasienPoli = DaftarPoli::with([
+            'pasien.user',
+            'jadwalPeriksa.dokter.user',
+        ])
+            ->whereHas('jadwalPeriksa.dokter', function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            })
+            ->get();
+
+        return view('dokter.index', compact('dokter', 'pasienPoli'));
     }
 
     /**
