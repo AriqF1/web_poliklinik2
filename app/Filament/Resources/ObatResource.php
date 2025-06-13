@@ -54,8 +54,7 @@ class ObatResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('harga')
                     ->money('idr')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
