@@ -12,8 +12,8 @@
 @section('header')
     <div class="dashboard-header">
         <div class="header-content">
-            <h1 class="dashboard-title">Dashboard Dokter</h1>
-            <p class="dashboard-subtitle">Selamat datang {{ $dokter->name }}, pantau kesehatan pasien anda dengan mudah</p>
+            <h1 class="dashboard-title">Dashboard Periksa </h1>
+            <p class="dashboard-subtitle">Selamat datang {{ $dokter->name }}, periksa pasien anda dengan mudah</p>
         </div>
         <div class="user-info">
             <div class="user-avatar">
@@ -34,7 +34,7 @@
                 Pemeriksaan
             </h3>
             <div class ="activity-list">
-                @foreach ($pasienPoli as $item)
+                @forelse ($pasienPoli as $item)
                     <div class="activity-item" style="cursor: pointer;"
                         onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
                         <div class="activity-icon bg-primary">
@@ -49,8 +49,21 @@
                             </span>
                         </div>
                     </div>
+                @empty
+                    <div class="activity-item" style="cursor: pointer;">
+                        <div class="activity-icon bg-primary">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div class="activity-content">
+                            <h4>Nama Pasien : - </h4>
+                            <p>Keluhan : - </p>
+                            <p>Antrian ke : - </p>
+                            <span class="activity-time">Pada -
+                            </span>
+                        </div>
+                    </div>
+                @endforelse
             </div>
-            @endforeach
         </div>
     </div>
 
