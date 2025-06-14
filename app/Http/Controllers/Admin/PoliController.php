@@ -9,6 +9,7 @@ use App\Models\Poli;
 use App\Models\DaftarPoli;
 use App\Models\JadwalPeriksa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 
 class PoliController extends Controller
@@ -36,6 +37,8 @@ class PoliController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+
+
     public function store(Request $request)
     {
         $request->validate([
@@ -46,17 +49,31 @@ class PoliController extends Controller
         $user = Auth::user();
         $idPasien = $user->id;
 
-        $jumlahPendaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)->count();
-        $noAntrian = $jumlahPendaftar + 1;
+        DB::beginTransaction();
 
-        DaftarPoli::create([
-            'id_pasien' => $idPasien,
-            'id_jadwal' => $request->id_jadwal,
-            'keluhan' => $request->keluhan,
-            'no_antrian' => $noAntrian,
-        ]);
-        return redirect()->back()->with('success', 'Berhasil mendaftar ke poli.');
+        try {
+            // Lock semua baris daftar_polis untuk jadwal ini
+            $jumlahPendaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)
+                ->lockForUpdate()
+                ->count();
+
+            $noAntrian = $jumlahPendaftar + 1;
+
+            DaftarPoli::create([
+                'id_pasien' => $idPasien,
+                'id_jadwal' => $request->id_jadwal,
+                'keluhan' => $request->keluhan,
+                'no_antrian' => $noAntrian,
+            ]);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Berhasil mendaftar ke poli.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal mendaftar: ' . $e->getMessage());
+        }
     }
+
 
     /**
      * Display the specified resource.
