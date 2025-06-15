@@ -10,6 +10,7 @@ use App\Models\DaftarPoli;
 use App\Models\JadwalPeriksa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class PoliController extends Controller
@@ -22,7 +23,39 @@ class PoliController extends Controller
         $pasien = User::where('id', Auth::id())->first();
         $polis = Poli::withCount('dokter')->get();
         $totalPoli = Poli::count();
-        $jadwals = JadwalPeriksa::with('dokter.user', 'dokter.poli')->get();
+        $jadwals = JadwalPeriksa::with('dokter.user', 'dokter.poli')
+            ->where('is_aktif', true)
+            ->get()
+            ->filter(function ($jadwal) {
+                $hariJadwal = $jadwal->hari;
+                $jamMulaiJadwal = Carbon::parse($jadwal->jam_mulai);
+
+                $today = Carbon::now();
+                $currentDayInIndonesian = $today->isoFormat('dddd');
+                $currentTime = $today->copy();
+                $hariMap = [
+                    'Minggu' => 0,
+                    'Senin' => 1,
+                    'Selasa' => 2,
+                    'Rabu' => 3,
+                    'Kamis' => 4,
+                    'Jumat' => 5,
+                    'Sabtu' => 6
+                ];
+                $todayOrder = $hariMap[$currentDayInIndonesian] ?? -1;
+                $jadwalOrder = $hariMap[$hariJadwal] ?? -1;
+                if ($jadwalOrder === -1) {
+                    return false;
+                }
+                if ($jadwalOrder < $todayOrder) {
+                    return false;
+                }
+                if ($jadwalOrder === $todayOrder) {
+                    return $jamMulaiJadwal->format('H:i') > $currentTime->format('H:i');
+                }
+                return true;
+            })
+            ->values();
         return view('pasien.poli.index', compact('pasien', 'polis', 'totalPoli', 'jadwals'));
     }
 
