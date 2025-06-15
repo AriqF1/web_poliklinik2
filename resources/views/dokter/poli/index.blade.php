@@ -128,6 +128,11 @@
                     <input type="time" name="jam_selesai" class="form-control" required>
                 </div>
 
+                <div class="mb-3">
+                    <input type="checkbox" name="is_aktif" id="is_aktif" value="1">
+                    <label for="is_aktif">Aktifkan Jadwal Ini</label>
+                </div>
+
                 <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
             </form>
         </div>
