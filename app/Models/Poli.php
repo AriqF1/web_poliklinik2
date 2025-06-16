@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Poli extends Model
 {
@@ -12,8 +12,8 @@ class Poli extends Model
         'keterangan',
     ];
 
-    public function dokter(): HasOne
+    public function dokter(): HasMany
     {
-        return $this->hasOne(Dokter::class, 'poli_id');
+        return $this->hasMany(Dokter::class, 'poli_id');
     }
 }
