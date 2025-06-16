@@ -80,20 +80,18 @@ class PoliController extends Controller
         ]);
 
         $user = Auth::user();
-        $idPasien = $user->id;
+        $pasien = $user->pasien;
 
         DB::beginTransaction();
 
         try {
-            // Lock semua baris daftar_polis untuk jadwal ini
             $jumlahPendaftar = DaftarPoli::where('id_jadwal', $request->id_jadwal)
-                ->lockForUpdate()
                 ->count();
 
             $noAntrian = $jumlahPendaftar + 1;
 
             DaftarPoli::create([
-                'id_pasien' => $idPasien,
+                'id_pasien' => $pasien->id,
                 'id_jadwal' => $request->id_jadwal,
                 'keluhan' => $request->keluhan,
                 'no_antrian' => $noAntrian,
