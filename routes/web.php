@@ -36,6 +36,7 @@ Route::prefix('dokter')
         Route::get('/dashboard', [DokterController::class, 'index'])->name('index');
         Route::get('/jadwal-periksa', [JadwalPeriksaController::class, 'index'])->name('poli.index');
         Route::get('/periksa', [PeriksaController::class, 'index'])->name('periksa.index');
+        Route::get('/riwayat-periksa', [PeriksaController::class, 'riwayat'])->name('riwayat.index');
         Route::post('/periksa', [PeriksaController::class, 'store'])->name('periksa.store');
         Route::post('/create/jadwal-periksa', [JadwalPeriksaController::class, 'store'])->name('jadwal.store');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout'); // Proses logout
