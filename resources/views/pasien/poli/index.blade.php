@@ -11,8 +11,8 @@
 @section('header')
     <div class="dashboard-header">
         <div class="header-content">
-            <h1 class="dashboard-title">Daftar Poli</h1>
-            <p class="dashboard-subtitle">Selamat datang di halaman daftar poli</p>
+            <h1 class="dashboard-title">Dashboard Poli</h1>
+            <p class="dashboard-subtitle">Selamat datang di halaman daftar poli, siahkan mendaftar di poli yang tersedia</p>
         </div>
         <div class="user-info">
             <div class="user-avatar">
@@ -28,15 +28,24 @@
 
 @section('content')
     <div class="stats-grid">
+        @php
+            $icons = [
+                1 => 'fa-heart-pulse',
+                2 => 'fa-notes-medical',
+                3 => 'fa-tooth',
+                4 => 'fa-child',
+                5 => 'fa-x-ray',
+            ];
+        @endphp
         @foreach ($polis as $poli)
             <div class="stat-card card-primary" onclick="bukaModal('{{ $poli->id }}', '{{ $poli->nama_poli }}')"
                 style="cursor: pointer;">
                 <div class="stat-card-header">
                     <div class="stat-icon">
-                        <i class="fa-solid fa-house-medical"></i>
+                        <i class="fa-solid {{ $icons[$poli->id] ?? 'fa-question' }}"></i>
                     </div>
                     <div class="stat-trend">
-                        <i class="fas fa-arrow-up"></i>
+                        <i class="fas fa-arrow-left"></i>
                     </div>
                 </div>
                 <div class="stat-content">
@@ -77,42 +86,36 @@
     </div>
     <div class="recent-activity-section">
         <h3 class="section-title">
-            <i class="fas fa-clock me-2"></i>
-            Aktivitas Terbaru
+            <i class="fa-solid fa-house-medical-circle-xmark"></i>
+            <span> Keterangan Poli</span>
         </h3>
         <div class="activity-list">
-            <div class="activity-item">
-                <div class="activity-icon bg-success">
-                    <i class="fas fa-check"></i>
+            @php
+                $icons = [
+                    1 => 'fa-heart-pulse',
+                    2 => 'fa-notes-medical',
+                    3 => 'fa-tooth',
+                    4 => 'fa-child',
+                    5 => 'fa-x-ray',
+                ];
+            @endphp
+            @foreach ($poliact as $item)
+                <div class="activity-item">
+                    <div class="activity-icon bg-info">
+                        <i class="fa-solid {{ $icons[$item->id] ?? 'fa-question' }}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>{{ $item->nama_poli }} {{ $item->keterangan }}</h4>
+                        <p>Dapat berkonsultasi dengan para dokter yang tersedia : </p>
+                        @forelse ($item->dokter as $dokter)
+                            <p>- {{ $dokter->user->name }}</p>
+                        @empty
+                            <p><strong>Belum ada dokter tersedia..</strong></p>
+                        @endforelse
+                        <p></p>
+                    </div>
                 </div>
-                <div class="activity-content">
-                    <h4>Pemeriksaan Selesai</h4>
-                    <p>Konsultasi dengan Dr. Ahmad - Poli Umum</p>
-                    <span class="activity-time">2 jam yang lalu</span>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon bg-primary">
-                    <i class="fas fa-calendar"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Janji Temu Dijadwalkan</h4>
-                    <p>Besok, 09:00 - Dr. Sarah - Poli Anak</p>
-                    <span class="activity-time">1 hari yang lalu</span>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon bg-info">
-                    <i class="fas fa-prescription"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Resep Diterbitkan</h4>
-                    <p>3 jenis obat untuk pengobatan flu</p>
-                    <span class="activity-time">3 hari yang lalu</span>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 @endsection
