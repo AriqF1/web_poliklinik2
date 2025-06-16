@@ -43,16 +43,6 @@
                                 <span class="menu-text">Dashboard</span>
                                 <div class="menu-indicator"></div>
                             </a>
-
-                            {{-- <a href="{{ Route('pasien.periksa') ?? '#' }}"
-                                class="menu-item {{ request()->routeIs('pasien.periksa') ? 'active' : '' }}">
-                                <div class="menu-icon">
-                                    <i class="fas fa-stethoscope"></i>
-                                </div>
-                                <span class="menu-text">Periksa</span>
-                                <div class="menu-indicator"></div>
-                            </a> --}}
-
                             <a href="{{ Route('pasien.poli.index') }}"
                                 class="menu-item {{ request()->routeIs('pasien.poli.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
@@ -61,26 +51,10 @@
                                 <span class="menu-text">Daftar Poli</span>
                                 <div class="menu-indicator"></div>
                             </a>
-
-                            <a href="#" class="menu-item">
-                                <div class="menu-icon">
-                                    <i class="fas fa-history"></i>
-                                </div>
-                                <span class="menu-text">Riwayat</span>
-                                <div class="menu-indicator"></div>
-                            </a>
                         </div>
 
                         <div class="menu-section">
-                            <div class="menu-section-title">Akun</div>
-                            <a href="#" class="menu-item">
-                                <div class="menu-icon">
-                                    <i class="fas fa-user-cog"></i>
-                                </div>
-                                <span class="menu-text">Profil</span>
-                                <div class="menu-indicator"></div>
-                            </a>
-
+                            <div class="menu-section-title">Settings</div>
                             <a href="#" class="menu-item logout-item"
                                 onclick="event.preventDefault();document.getElementById('logout-form').submit();">
                                 <div class="menu-icon">
@@ -130,7 +104,6 @@
                                 <span class="menu-text">Poli</span>
                                 <div class="menu-indicator"></div>
                             </a>
-
                             <a href="{{ Route('dokter.periksa.index') ?? '#' }}"
                                 class="menu-item {{ request()->routeIs('dokter.periksa.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
@@ -139,27 +112,19 @@
                                 <span class="menu-text">Periksa</span>
                                 <div class="menu-indicator"></div>
                             </a>
-
                             <a href="{{ Route('dokter.riwayat.index') ?? '#' }}"
                                 class="menu-item {{ request()->routeIs('dokter.riwayat.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-stethoscope"></i>
+                                    <i class="fa-solid fa-clock"></i>
                                 </div>
                                 <span class="menu-text">Riwayat Periksa</span>
                                 <div class="menu-indicator"></div>
                             </a>
+
                         </div>
 
                         <div class="menu-section">
-                            <div class="menu-section-title">Akun</div>
-                            <a href="#" class="menu-item">
-                                <div class="menu-icon">
-                                    <i class="fas fa-user-cog"></i>
-                                </div>
-                                <span class="menu-text">Profil</span>
-                                <div class="menu-indicator"></div>
-                            </a>
-
+                            <div class="menu-section-title">Settings</div>
                             <a href="#" class="menu-item logout-item"
                                 onclick="event.preventDefault();document.getElementById('logout-form-dokter').submit();">
                                 <div class="menu-icon">
@@ -168,8 +133,8 @@
                                 <span class="menu-text">Logout</span>
                                 <div class="menu-indicator"></div>
                             </a>
-                            <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}"
-                                method="POST" style="display: none;">
+                            <form id="logout-form-dokter" action="{{ route('dokter.logout') ?? '#' }}" method="POST"
+                                style="display: none;">
                                 @csrf
                             </form>
                         </div>
