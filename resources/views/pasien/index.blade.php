@@ -83,7 +83,7 @@
             Aksi Cepat
         </h3>
         <div class="quick-actions-grid">
-            <a href="#" class="quick-action-item">
+            <a href="{{ route('pasien.poli.index') }}" class="quick-action-item">
                 <div class="action-icon bg-primary">
                     <i class="fas fa-plus"></i>
                 </div>
@@ -92,27 +92,6 @@
                     <p>Jadwalkan konsultasi baru</p>
                 </div>
             </a>
-
-            <a href="#" class="quick-action-item">
-                <div class="action-icon bg-success">
-                    <i class="fas fa-history"></i>
-                </div>
-                <div class="action-content">
-                    <h4>Riwayat Medis</h4>
-                    <p>Lihat rekam medis Anda</p>
-                </div>
-            </a>
-
-            <a href="#" class="quick-action-item">
-                <div class="action-icon bg-warning">
-                    <i class="fas fa-prescription-bottle"></i>
-                </div>
-                <div class="action-content">
-                    <h4>Resep Obat</h4>
-                    <p>Kelola resep dan obat</p>
-                </div>
-            </a>
-
             <a href="#" class="quick-action-item">
                 <div class="action-icon bg-info">
                     <i class="fas fa-user-cog"></i>
@@ -124,48 +103,6 @@
             </a>
         </div>
     </div>
-
-    <div class="recent-activity-section">
-        <h3 class="section-title">
-            <i class="fas fa-clock me-2"></i>
-            Aktivitas Terbaru
-        </h3>
-        <div class="activity-list">
-            <div class="activity-item">
-                <div class="activity-icon bg-success">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Pemeriksaan Selesai</h4>
-                    <p>Konsultasi dengan Dr. Ahmad - Poli Umum</p>
-                    <span class="activity-time">2 jam yang lalu</span>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon bg-primary">
-                    <i class="fas fa-calendar"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Janji Temu Dijadwalkan</h4>
-                    <p>Besok, 09:00 - Dr. Sarah - Poli Anak</p>
-                    <span class="activity-time">1 hari yang lalu</span>
-                </div>
-            </div>
-
-            <div class="activity-item">
-                <div class="activity-icon bg-info">
-                    <i class="fas fa-prescription"></i>
-                </div>
-                <div class="activity-content">
-                    <h4>Resep Diterbitkan</h4>
-                    <p>3 jenis obat untuk pengobatan flu</p>
-                    <span class="activity-time">3 hari yang lalu</span>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="health-tips-widget">
         <div class="widget-header">
             <h3 class="widget-title">
@@ -193,7 +130,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('announcement')
