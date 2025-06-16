@@ -56,7 +56,8 @@ class PoliController extends Controller
                 return true;
             })
             ->values();
-        return view('pasien.poli.index', compact('pasien', 'polis', 'totalPoli', 'jadwals'));
+        $poliact = Poli::with('dokter.user')->get();
+        return view('pasien.poli.index', compact('pasien', 'polis', 'totalPoli', 'jadwals', 'poliact'));
     }
 
     /**
