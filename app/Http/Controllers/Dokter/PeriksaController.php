@@ -32,6 +32,19 @@ class PeriksaController extends Controller
             ->get();
         return view('dokter.periksa.index', compact('dokter', 'pasienPoli', 'obats'));
     }
+    public function riwayat()
+    {
+        $dokter = Auth::user()->dokter;
+        $riwayat = Periksa::with([
+            'daftarPoli.pasien',
+            'detailPeriksa.obat',
+        ])
+            ->whereHas('daftarPoli.jadwalPeriksa', function ($query) use ($dokter) {
+                $query->where('id_dokter', $dokter->id);
+            })
+            ->get();
+        return view('dokter.riwayat.index', compact('dokter', 'riwayat'));
+    }
 
     /**
      * Show the form for creating a new resource.
