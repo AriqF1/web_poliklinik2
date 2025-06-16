@@ -44,8 +44,9 @@
                             <h4>Nama Pasien : {{ $item->pasien->user->name }}</h4>
                             <p>Keluhan : {{ $item->keluhan }}</p>
                             <p>Antrian ke - {{ $item->no_antrian }}</p>
-                            <span class="activity-time">Pada {{ $item->jadwalPeriksa->hari }}
-                                ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
+                            <span class="activity-time"><strong>Pada {{ $item->jadwalPeriksa->hari }}
+                                    ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
+                                </strong>
                             </span>
                         </div>
                     </div>
