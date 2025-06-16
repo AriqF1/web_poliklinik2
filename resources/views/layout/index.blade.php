@@ -140,11 +140,12 @@
                                 <div class="menu-indicator"></div>
                             </a>
 
-                            <a href="#" class="menu-item">
+                            <a href="{{ Route('dokter.riwayat.index') ?? '#' }}"
+                                class="menu-item {{ request()->routeIs('dokter.riwayat.index') ? 'active' : '' }}">
                                 <div class="menu-icon">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-stethoscope"></i>
                                 </div>
-                                <span class="menu-text">Pasien</span>
+                                <span class="menu-text">Riwayat Periksa</span>
                                 <div class="menu-indicator"></div>
                             </a>
                         </div>
