@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dokter;
 use App\Models\User;
 use App\Models\DaftarPoli;
+use App\Models\Obat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -18,17 +19,8 @@ class DokterController extends Controller
     {
         $dokter = Auth::user();
         $userId = $dokter->id;
-
-        $pasienPoli = DaftarPoli::with([
-            'pasien.user',
-            'jadwalPeriksa.dokter.user',
-        ])
-            ->whereHas('jadwalPeriksa.dokter', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
-            ->get();
-
-        return view('dokter.index', compact('dokter', 'pasienPoli'));
+        $obats = Obat::pluck('obats.id', 'obats.nama_obat');
+        return view('dokter.index', compact('dokter', 'obats'));
     }
 
     /**
