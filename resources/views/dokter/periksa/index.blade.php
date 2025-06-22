@@ -1,5 +1,5 @@
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ asset('css/dashboard-periksa.css') }}">
 @php
     $showTables = false;
     $showFullscreen = false;
@@ -9,59 +9,69 @@
 
 @section('title', 'Dashboard | Dokter')
 @section('dashboard', 'Dokter')
+
 @section('header')
-    <div class="dashboard-header">
-        <div class="header-content">
-            <h1 class="dashboard-title">Dashboard Periksa </h1>
-            <p class="dashboard-subtitle">Selamat datang {{ $dokter->name }}, periksa pasien anda dengan mudah</p>
-        </div>
-        <div class="user-info">
-            <div class="user-avatar">
-                <i class="fas fa-user-circle"></i>
+    <div class="modern-header">
+        <div class="header-main">
+            <div class="header-content">
+                <h1 class="header-title">Dashboard Periksa </h1>
+                <p class="header-subtitle">Selamat datang {{ $dokter->name }}, periksa pasien anda dengan mudah</p>
             </div>
-            <div class="user-details">
-                <div class="user-status">Dokter Aktif</div>
+            <div class="doctor-profile">
+                <div class="doctor-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <span class="status-dot"></span>
+                </div>
+                <div class="user-details">
+                    <div class="doctor-name">{{ $dokter->name }}</div>
+                    <div class="doctor-status">Dokter Aktif</div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 
 @section('content')
-    <div class="stats-grid">
-        <div class="recent-activity-section">
-            <h3 class="section-title">
-                <i class="fas fa-clock me-2"></i>
-                Pemeriksaan
-            </h3>
-            <div class ="activity-list">
+    <div class="dashboard-container">
+        <div class="history-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="fas fa-clock me-2"></i>
+                    Daftar Pemeriksaan Pasien
+                </h3>
+            </div>
+            <div class="history-list">
                 @forelse ($pasienPoli as $item)
-                    <div class="activity-item" style="cursor: pointer;"
+                    <div class="history-card" style="cursor: pointer;"
                         onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
-                        <div class="activity-icon bg-primary">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h4>Nama Pasien : {{ $item->pasien->user->name }}</h4>
-                            <p>Keluhan : {{ $item->keluhan }}</p>
-                            <p>Antrian ke - {{ $item->no_antrian }}</p>
-                            <span class="activity-time"><strong>Pada {{ $item->jadwalPeriksa->hari }}
-                                    ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
-                                </strong>
-                            </span>
+                        <div class="card-header">
+                            <div class="patient-info">
+                                <div class="patient-avatar" style="background: var(--primary-color);">
+                                    <i class="fas fa-user-injured"></i>
+                                </div>
+                                <div>
+                                    <h4 class="patient-name">Nama Pasien : {{ $item->pasien->user->name }}</h4>
+                                    <p class="patient-id">Keluhan : {{ $item->keluhan }}</p>
+                                </div>
+                            </div>
+                            <div class="examination-meta">
+                                <p class="examination-date">Antrian ke - {{ $item->no_antrian }}</p>
+                                <span class="examination-date"><strong>Pada {{ $item->jadwalPeriksa->hari }}
+                                        ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
+                                    </strong>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 @empty
-                    <div class="activity-item" style="cursor: pointer;">
-                        <div class="activity-icon bg-primary">
-                            <i class="fas fa-calendar"></i>
+                    <div class="empty-state">
+                        <div class="empty-illustration">
+                            <i class="fas fa-clipboard-list"></i>
                         </div>
-                        <div class="activity-content">
-                            <h4>Nama Pasien : - </h4>
-                            <p>Keluhan : - </p>
-                            <p>Antrian ke : - </p>
-                            <span class="activity-time">Pada -
-                            </span>
-                        </div>
+                        <h3 class="empty-title">Tidak ada pasien dalam antrian pemeriksaan saat ini.</h3>
+                        <p class="empty-description">Silahkan tunggu pasien yang mendaftar atau cek jadwal poli Anda.</p>
                     </div>
                 @endforelse
             </div>
@@ -69,7 +79,7 @@
     </div>
 
     {{-- Modal Pemeriksaan --}}
-    <div id="modalPemeriksaan" class="modal" style="display: none;">
+    <div id="modalPemeriksaan" class="modal">
         <div class="modal-content">
             <span class="close" onclick="tutupModal()">&times;</span>
             <h5 id="modalNamaPasien">Nama Pasien</h5>
@@ -78,27 +88,24 @@
                 @csrf
                 <input type="hidden" id="modalPoliId" name="id_daftar_poli">
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label for="tgl_periksa" class="block text-gray-700 text-sm font-bold mb-2">Tanggal Periksa:</label>
-                    <input type="date" name="tgl_periksa" id="tgl_periksa"
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-gray-700 leading-tight focus:outline-none focus:border-purple-500 focus:shadow-outline"
-                        required value="{{ date('Y-m-d') }}">
+                    <input type="date" name="tgl_periksa" id="tgl_periksa" class="form-control" required
+                        value="{{ date('Y-m-d') }}">
                     @error('tgl_periksa')
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-4">
+                <div class="mb-3">
                     <label for="catatan" class="block text-gray-700 text-sm font-bold mb-2">Catatan Pemeriksaan:</label>
-                    <textarea name="catatan" id="catatan" rows="3"
-                        class="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-gray-700 leading-tight focus:outline-none focus:border-purple-500 focus:shadow-outline"
-                        required>{{ old('catatan') }}</textarea>
+                    <textarea name="catatan" id="catatan" rows="3" class="form-control" required>{{ old('catatan') }}</textarea>
                     @error('catatan')
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="mb-6 checkbox-group">
+                <div class="mb-3 checkbox-group">
                     <label class="block text-gray-700 text-sm font-bold mb-2">Pilih Obat:</label>
                     @if ($obats->isEmpty())
                         <p class="text-gray-600 text-sm">Tidak ada obat tersedia.</p>
@@ -131,7 +138,6 @@
         </div>
     </div>
 @endsection
-
 <script>
     function bukaModal(poliId, namaPasien) {
         const modal = document.getElementById('modalPemeriksaan');
@@ -144,7 +150,6 @@
         document.getElementById('modalPemeriksaan').style.display = 'none';
     }
 
-    // Menutup modal saat klik di luar konten
     window.onclick = function(event) {
         const modal = document.getElementById('modalPemeriksaan');
         if (event.target === modal) {
