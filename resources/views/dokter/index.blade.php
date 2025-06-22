@@ -91,21 +91,6 @@
                         <span class="activity-time">2 jam yang lalu</span>
                     </div>
                 </div>
-                @foreach ($pasienPoli as $item)
-                    <div class="activity-item">
-                        <div class="activity-icon bg-primary">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div class="activity-content">
-                            <h4>{{ $item->pasien->nama }}</h4>
-                            <p>{{ $item->keluhan }}</p>
-                            <p>{{ $item->no_antrian }}</p>
-                            <span class="activity-time">{{ $item->jadwalPeriksa->hari }}
-                                ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
-                            </span>
-                        </div>
-                    </div>
-                @endforeach
 
                 <div class="activity-item">
                     <div class="activity-icon bg-info">
