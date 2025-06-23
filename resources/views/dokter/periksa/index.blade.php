@@ -34,47 +34,45 @@
 @endsection
 
 @section('content')
-    <div class="dashboard-container">
-        <div class="history-section">
-            <div class="section-header">
-                <h3 class="section-title">
-                    <i class="fas fa-clock me-2"></i>
-                    Daftar Pemeriksaan Pasien
-                </h3>
-            </div>
-            <div class="history-list">
-                @forelse ($pasienPoli as $item)
-                    <div class="history-card" style="cursor: pointer;"
-                        onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
-                        <div class="card-header">
-                            <div class="patient-info">
-                                <div class="patient-avatar" style="background: var(--primary-color);">
-                                    <i class="fas fa-user-injured"></i>
-                                </div>
-                                <div>
-                                    <h4 class="patient-name">Nama Pasien : {{ $item->pasien->user->name }}</h4>
-                                    <p class="patient-id">Keluhan : {{ $item->keluhan }}</p>
-                                </div>
+    <div class="history-section">
+        <div class="section-header">
+            <h3 class="section-title">
+                <i class="fas fa-clock me-2"></i>
+                Daftar Pemeriksaan Pasien
+            </h3>
+        </div>
+        <div class="history-list">
+            @forelse ($pasienPoli as $item)
+                <div class="history-card" style="cursor: pointer;"
+                    onclick="bukaModal('{{ $item->id }}', '{{ $item->pasien->user->name }}', '{{ $item->keluhan }}')">
+                    <div class="card-header">
+                        <div class="patient-info">
+                            <div class="patient-avatar" style="background: var(--primary-color);">
+                                <i class="fas fa-user-injured"></i>
                             </div>
-                            <div class="examination-meta">
-                                <p class="examination-date">Antrian ke - {{ $item->no_antrian }}</p>
-                                <span class="examination-date"><strong>Pada {{ $item->jadwalPeriksa->hari }}
-                                        ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
-                                    </strong>
-                                </span>
+                            <div>
+                                <h4 class="patient-name">Nama Pasien : {{ $item->pasien->user->name }}</h4>
+                                <p class="patient-id">Keluhan : {{ $item->keluhan }}</p>
                             </div>
                         </div>
-                    </div>
-                @empty
-                    <div class="empty-state">
-                        <div class="empty-illustration">
-                            <i class="fas fa-clipboard-list"></i>
+                        <div class="examination-meta">
+                            <p class="examination-date">Antrian ke - {{ $item->no_antrian }}</p>
+                            <span class="examination-date"><strong>Pada {{ $item->jadwalPeriksa->hari }}
+                                    ({{ $item->jadwalPeriksa->jam_mulai }} - {{ $item->jadwalPeriksa->jam_selesai }})
+                                </strong>
+                            </span>
                         </div>
-                        <h3 class="empty-title">Tidak ada pasien dalam antrian pemeriksaan saat ini.</h3>
-                        <p class="empty-description">Silahkan tunggu pasien yang mendaftar atau cek jadwal poli Anda.</p>
                     </div>
-                @endforelse
-            </div>
+                </div>
+            @empty
+                <div class="empty-state">
+                    <div class="empty-illustration">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="empty-title">Tidak ada pasien dalam antrian pemeriksaan saat ini.</h3>
+                    <p class="empty-description">Silahkan tunggu pasien yang mendaftar atau cek jadwal poli Anda.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 
