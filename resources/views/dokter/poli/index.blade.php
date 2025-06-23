@@ -23,7 +23,7 @@
                     <span class="status-dot"></span>
                 </div>
                 <div class="user-details">
-                    <div class="doctor-name">{{ $dokter->name }}</div>
+                    <div class="doctor-name">{{ $dokter->user->name }}</div>
                     <div class="doctor-status">Dokter Aktif</div>
                 </div>
             </div>
@@ -78,27 +78,9 @@
                         </div>
                         <div>
                             <h4 class="patient-name">Pemeriksaan Selesai</h4>
-                            <p class="patient-id">Konsultasi dengan Dr. Ahmad - Poli Umum</p>
+                            <p class="patient-id">Pemeriksaan pasien dengan {{ $dokter->user->name }} -
+                                {{ $poli->nama_poli }}</p>
                         </div>
-                    </div>
-                    <div class="examination-meta">
-                        <span class="activity-time examination-date">2 jam yang lalu</span>
-                    </div>
-                </div>
-            </div>
-            <div class="history-card">
-                <div class="card-header">
-                    <div class="patient-info">
-                        <div class="patient-avatar" style="background: var(--primary-color);">
-                            <i class="fas fa-calendar"></i>
-                        </div>
-                        <div>
-                            <h4 class="patient-name">Janji Temu Dijadwalkan</h4>
-                            <p class="patient-id">Besok, 09:00 - Dr. Sarah - Poli Anak</p>
-                        </div>
-                    </div>
-                    <div class="examination-meta">
-                        <span class="activity-time examination-date">1 hari yang lalu</span>
                     </div>
                 </div>
             </div>
@@ -113,8 +95,18 @@
                             <p class="patient-id">3 jenis obat untuk pengobatan flu</p>
                         </div>
                     </div>
-                    <div class="examination-meta">
-                        <span class="activity-time examination-date">3 hari yang lalu</span>
+                </div>
+            </div>
+            <div class="history-card">
+                <div class="card-header">
+                    <div class="patient-info">
+                        <div class="patient-avatar" style="background: var(--primary-color);">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div>
+                            <h4 class="patient-name">Janji Temu Dijadwalkan</h4>
+                            <p class="patient-id"></p>
+                        </div>
                     </div>
                 </div>
             </div>
