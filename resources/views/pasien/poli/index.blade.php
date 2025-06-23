@@ -9,87 +9,39 @@
 @section('title', 'Dashboard | Pasien')
 @section('dashboard', 'Pasien')
 @section('header')
-    <div class="dashboard-header">
-        <div class="header-content">
-            <h1 class="dashboard-title">Dashboard Poli</h1>
-            <p class="dashboard-subtitle">Selamat datang di halaman daftar poli, siahkan mendaftar di poli yang tersedia</p>
-        </div>
-        <div class="user-info">
-            <div class="user-avatar">
-                <i class="fas fa-user-circle"></i>
+    <div class="modern-header">
+        <div class="header-main">
+            <div class="header-content">
+                <h1 class="header-title">Dashboard Poli</h1>
+                <p class="header-subtitle">Selamat datang {{ $pasien->name }}, silahkan untuk mendaftar poli sebelum
+                    melakukan pemeriksaan
+                </p>
             </div>
-            <div class="user-details">
-                <div class="user-name">{{ $pasien->name }}</div>
-                <div class="user-status">Pasien Aktif</div>
+            <div class="doctor-profile">
+                <div class="doctor-avatar">
+                    <div class="avatar-circle">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <span class="status-dot"></span>
+                </div>
+                <div class="user-details">
+                    <div class="doctor-name">{{ $pasien->name }}</div>
+                    <div class="doctor-status">Pasien Aktif</div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
 
 @section('content')
-    <div class="stats-grid">
-        @php
-            $icons = [
-                1 => 'fa-heart-pulse',
-                2 => 'fa-notes-medical',
-                3 => 'fa-tooth',
-                4 => 'fa-child',
-                5 => 'fa-x-ray',
-            ];
-        @endphp
-        @foreach ($polis as $poli)
-            <div class="stat-card card-primary" onclick="bukaModal('{{ $poli->id }}', '{{ $poli->nama_poli }}')"
-                style="cursor: pointer;">
-                <div class="stat-card-header">
-                    <div class="stat-icon">
-                        <i class="fa-solid {{ $icons[$poli->id] ?? 'fa-question' }}"></i>
-                    </div>
-                    <div class="stat-trend">
-                        <i class="fas fa-arrow-left"></i>
-                    </div>
-                </div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ $poli->dokter_count }}</div>
-                    <div class="stat-label">{{ $poli->nama_poli }}</div>
-                    <div class="stat-description">{{ $poli->keterangan }}</div>
-                </div>
-            </div>
-        @endforeach
-        <div id="modalPendaftaran" class="modal" style="display: none;">
-            <div class="modal-content">
-                <span class="close" onclick="tutupModal()">&times;</span>
-                <h2>Pendaftaran Poli</h2>
-                <p>Anda akan mendaftar ke <strong id="modalNamaPoli"></strong></p>
-                <form action="{{ route('pasien.poli.daftar-poli.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="poli_id" id="modalPoliId">
-                    <div class="form-group">
-                        <label for="id_jadwal">Pilih Jadwal:</label>
-                        <select name="id_jadwal" id="id_jadwal" required>
-                            @foreach ($jadwals as $jadwal)
-                                <option value="{{ $jadwal->id }}" data-poli-id="{{ $jadwal->dokter->poli_id ?? '' }}">
-                                    {{ $jadwal->dokter->user->name ?? 'Dokter tidak ditemukan' }} - {{ $jadwal->hari }}
-                                    ({{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }})
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="keluhan">Keluhan:</label>
-                        <textarea name="keluhan" id="keluhan" rows="3" required></textarea>
-                    </div>
-
-                    <button type="submit">Konfirmasi Pendaftaran</button>
-                </form>
-            </div>
+    <div class="stats-section">
+        <div class="section-header">
+            <h3 class="section-title">
+                <i class="fas fa-hospital-user me-2"></i>
+                Daftar Poli Tersedia
+            </h3>
         </div>
-    </div>
-    <div class="recent-activity-section">
-        <h3 class="section-title">
-            <i class="fa-solid fa-house-medical-circle-xmark"></i>
-            <span> Keterangan Poli</span>
-        </h3>
-        <div class="activity-list">
+        <div class="stats-grid">
             @php
                 $icons = [
                     1 => 'fa-heart-pulse',
@@ -98,24 +50,112 @@
                     4 => 'fa-child',
                     5 => 'fa-x-ray',
                 ];
+                $colors = [
+                    1 => 'primary',
+                    2 => 'success',
+                    3 => 'warning',
+                    4 => 'info',
+                    5 => 'danger',
+                ];
             @endphp
-            @foreach ($poliact as $item)
-                <div class="activity-item">
-                    <div class="activity-icon bg-info">
-                        <i class="fa-solid {{ $icons[$item->id] ?? 'fa-question' }}"></i>
+            @foreach ($polis as $poli)
+                <div class="stat-card {{ $colors[$poli->id] ?? 'primary' }}"
+                    onclick="bukaModal('{{ $poli->id }}', '{{ $poli->nama_poli }}')" style="cursor: pointer;">
+                    <div class="stat-header">
+                        <div class="stat-icon">
+                            <i class="fa-solid {{ $icons[$poli->id] ?? 'fa-question' }}"></i>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
                     </div>
-                    <div class="activity-content">
-                        <h4>{{ $item->nama_poli }} {{ $item->keterangan }}</h4>
-                        <p>Dapat berkonsultasi dengan para dokter yang tersedia : </p>
-                        @forelse ($item->dokter as $dokter)
-                            <p>- {{ $dokter->user->name }}</p>
-                        @empty
-                            <p><strong>Belum ada dokter tersedia..</strong></p>
-                        @endforelse
-                        <p></p>
+                    <div class="stat-content">
+                        <div class="stat-number">{{ $poli->dokter_count }}</div>
+                        <div class="stat-label">{{ $poli->nama_poli }}</div>
+                        <div class="stat-description">{{ $poli->keterangan }}</div>
                     </div>
                 </div>
             @endforeach
+        </div>
+    </div>
+
+    {{-- Modal Pendaftaran --}}
+    <div id="modalPendaftaran" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="tutupModal()">&times;</span>
+            <h5 class="section-title">Pendaftaran Poli</h5>
+            <p>Anda akan mendaftar ke <strong id="modalNamaPoli"></strong></p>
+            <form action="{{ route('pasien.poli.daftar-poli.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="poli_id" id="modalPoliId">
+                <div class="mb-3">
+                    <label for="id_jadwal">Pilih Jadwal:</label>
+                    <select name="id_jadwal" id="id_jadwal" class="form-control" required>
+                        <option value="">Pilih Jadwal Dokter</option>
+                        @foreach ($jadwals as $jadwal)
+                            <option value="{{ $jadwal->id }}" data-poli-id="{{ $jadwal->dokter->poli_id ?? '' }}">
+                                {{ $jadwal->dokter->user->name ?? 'Dokter tidak ditemukan' }} - {{ $jadwal->hari }}
+                                ({{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }})
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label for="keluhan">Keluhan:</label>
+                    <textarea name="keluhan" id="keluhan" rows="3" class="form-control" required></textarea>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4">
+                    <button type="button" class="btn btn-secondary" onclick="tutupModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary">Konfirmasi Pendaftaran</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="history-section">
+        <div class="section-header">
+            <h3 class="section-title">
+                <i class="fa-solid fa-house-medical-circle-xmark me-2"></i>
+                <span>Keterangan Poli</span>
+            </h3>
+        </div>
+        <div class="history-list">
+            @forelse ($poliact as $item)
+                <div class="history-card">
+                    <div class="card-header">
+                        <div class="patient-info">
+                            <div class="patient-avatar" style="background: var(--info-color);">
+                                <i class="fa-solid {{ $icons[$item->id] ?? 'fa-question' }}"></i>
+                            </div>
+                            <div>
+                                <h4 class="patient-name">{{ $item->nama_poli }}</h4>
+                                <p class="patient-id">{{ $item->keterangan }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="detail-section">
+                            <h4 class="detail-title"></i>Dokter Tersedia: </h4>
+                            <div class="detail-content">
+                                @forelse ($item->dokter as $dokter)
+                                    <p> - {{ $dokter->user->name }}</p>
+                                @empty
+                                    <p><strong>Belum ada dokter tersedia.</strong></p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="empty-state">
+                    <div class="empty-illustration">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3 class="empty-title">Belum ada poli aktif tersedia.</h3>
+                    <p class="empty-description">Silahkan cek kembali nanti atau hubungi administrasi.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection
@@ -125,21 +165,29 @@
         document.getElementById('modalPoliId').value = poliId;
         document.getElementById('modalNamaPoli').innerText = namaPoli;
 
-        document.getElementById('modalPendaftaran').style.display = 'flex';
+        const modal = document.getElementById('modalPendaftaran');
+        modal.style.display = 'flex';
 
         const selectJadwal = document.getElementById('id_jadwal');
         const options = selectJadwal.querySelectorAll('option');
 
+        let hasVisibleOptions = false;
         options.forEach(option => {
-            const optionPoliId = option.getAttribute('data-poli-id');
-            if (optionPoliId === poliId) {
+            if (option.value === "") {
                 option.style.display = '';
             } else {
-                option.style.display = 'none';
+                const optionPoliId = option.getAttribute('data-poli-id');
+                if (optionPoliId === poliId) {
+                    option.style.display = '';
+                    hasVisibleOptions = true;
+                } else {
+                    option.style.display = 'none';
+                }
             }
         });
 
-        const firstVisibleOption = Array.from(options).find(option => option.style.display === '');
+        const firstVisibleOption = Array.from(options).find(option => option.style.display === '' && option.value !==
+            "");
         if (firstVisibleOption) {
             selectJadwal.value = firstVisibleOption.value;
         } else {
@@ -149,12 +197,14 @@
 
     function tutupModal() {
         document.getElementById('modalPendaftaran').style.display = 'none';
+        document.querySelector('#modalPendaftaran form').reset();
     }
 
     window.onclick = function(event) {
         const modal = document.getElementById('modalPendaftaran');
         if (event.target == modal) {
             modal.style.display = "none";
+            document.querySelector('#modalPendaftaran form').reset();
         }
     }
 </script>
@@ -168,7 +218,7 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(5px);
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         animation: fadeIn 0.3s ease-out;
