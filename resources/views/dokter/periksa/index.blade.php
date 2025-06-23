@@ -165,7 +165,7 @@
         height: 100%;
         background-color: rgba(0, 0, 0, 0.6);
         backdrop-filter: blur(5px);
-        display: flex;
+        display: none;
         align-items: center;
         justify-content: center;
         animation: fadeIn 0.3s ease-out;
