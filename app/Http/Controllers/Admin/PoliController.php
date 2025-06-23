@@ -80,7 +80,8 @@ class PoliController extends Controller
             'keluhan' => 'required|string',
         ]);
 
-        $user = Auth::id();
+        $user = Auth::user();
+        $idPasien = $user->pasien->id;
         DB::beginTransaction();
 
         try {
@@ -90,7 +91,7 @@ class PoliController extends Controller
             $noAntrian = $jumlahPendaftar + 1;
 
             DaftarPoli::create([
-                'id_pasien' => $user,
+                'id_pasien' => $idPasien,
                 'id_jadwal' => $request->id_jadwal,
                 'keluhan' => $request->keluhan,
                 'no_antrian' => $noAntrian,
