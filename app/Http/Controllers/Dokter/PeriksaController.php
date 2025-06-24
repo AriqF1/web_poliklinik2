@@ -47,14 +47,6 @@ class PeriksaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -104,37 +96,5 @@ class PeriksaController extends Controller
             DB::rollBack();
             return redirect()->back()->with('error', 'Gagal menyimpan pemeriksaan: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Periksa $periksa)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Periksa $periksa)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Periksa $periksa)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Periksa $periksa)
-    {
-        //
     }
 }
