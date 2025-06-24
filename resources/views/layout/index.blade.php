@@ -145,6 +145,7 @@
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
+
             <!-- Top Navigation Bar -->
             <div class="top-navbar">
                 <div class="navbar-left">
@@ -165,7 +166,17 @@
                     </div>
                 </div>
             </div>
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
             <!-- Content Area -->
             <div class="content-area">
                 <!-- Header Section -->
@@ -217,7 +228,7 @@
 
     <script>
         // Sidebar functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
             const sidebarToggle = document.getElementById('sidebarToggle');
@@ -226,7 +237,7 @@
 
             // Desktop sidebar toggle
             if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', function() {
+                sidebarToggle.addEventListener('click', function () {
                     sidebar.classList.toggle('collapsed');
                     mainContent.classList.toggle('sidebar-collapsed');
                 });
@@ -234,7 +245,7 @@
 
             // Mobile sidebar toggle
             if (mobileSidebarToggle) {
-                mobileSidebarToggle.addEventListener('click', function() {
+                mobileSidebarToggle.addEventListener('click', function () {
                     sidebar.classList.toggle('mobile-open');
                     sidebarOverlay.classList.toggle('active');
                     document.body.classList.toggle('sidebar-mobile-open');
@@ -242,7 +253,7 @@
             }
 
             // Close mobile sidebar when clicking overlay
-            sidebarOverlay.addEventListener('click', function() {
+            sidebarOverlay.addEventListener('click', function () {
                 sidebar.classList.remove('mobile-open');
                 sidebarOverlay.classList.remove('active');
                 document.body.classList.remove('sidebar-mobile-open');
@@ -251,7 +262,7 @@
             // Close mobile sidebar when clicking menu item
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => {
-                item.addEventListener('click', function() {
+                item.addEventListener('click', function () {
                     if (window.innerWidth <= 768) {
                         sidebar.classList.remove('mobile-open');
                         sidebarOverlay.classList.remove('active');
@@ -261,7 +272,7 @@
             });
 
             // Handle window resize
-            window.addEventListener('resize', function() {
+            window.addEventListener('resize', function () {
                 if (window.innerWidth > 768) {
                     sidebar.classList.remove('mobile-open');
                     sidebarOverlay.classList.remove('active');
@@ -269,6 +280,12 @@
                 }
             });
         });
+        setTimeout(() => {
+            document.querySelectorAll('.alert').forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.style.display = 'none', 500);
+            });
+        }, 4000);
     </script>
 
     @stack('scripts')
