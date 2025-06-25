@@ -97,7 +97,8 @@
 
                 <div class="mb-3">
                     <label for="catatan" class="block text-gray-700 text-sm font-bold mb-2">Catatan Pemeriksaan:</label>
-                    <textarea name="catatan" id="catatan" rows="3" class="form-control" required>{{ old('catatan') }}</textarea>
+                    <textarea name="catatan" id="catatan" rows="3" class="form-control"
+                        required>{{ old('catatan') }}</textarea>
                     @error('catatan')
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
@@ -110,9 +111,8 @@
                     @else
                         @foreach ($obats as $obat)
                             <div class="checkbox-item">
-                                <input type="checkbox" name="obat_ids[]" id="obat_{{ $obat->id }}"
-                                    value="{{ $obat->id }}"
-                                    {{ in_array($obat->id, old('obat_ids', [])) ? 'checked' : '' }}
+                                <input type="checkbox" name="obat_ids[]" id="obat_{{ $obat->id }}" value="{{ $obat->id }}"
+                                    data-harga="{{ $obat->harga }}" {{ in_array($obat->id, old('obat_ids', [])) ? 'checked' : '' }}
                                     class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500 border-gray-300">
                                 <label for="obat_{{ $obat->id }}" class="ml-2 text-gray-700">{{ $obat->nama_obat }}
                                     (Rp {{ number_format($obat->harga, 0, ',', '.') }})
@@ -127,6 +127,10 @@
                         <p class="text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                <div class="mb-3">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Total Biaya:</label>
+                    <p id="totalBiaya" class="text-lg font-bold">Rp 150.000</p>
+                </div>
 
                 <div class="flex justify-end gap-3 mt-4">
                     <button type="button" class="btn btn-secondary" onclick="tutupModal()">Batal</button>
@@ -137,10 +141,39 @@
     </div>
 @endsection
 <script>
+    const DEFAULT_BIAYA_PERIKSA = 150000;
+
+    function formatRupiah(angka) {
+        let reverse = angka.toString().split('').reverse().join('');
+        let ribuan = reverse.match(/\d{1,3}/g);
+        let formatted = ribuan.join('.').split('').reverse().join('');
+        return `Rp ${formatted}`;
+    }
+
+    function hitungTotalBiaya() {
+        let totalObat = 0;
+        const checkboxes = document.querySelectorAll('input[name="obat_ids[]"]:checked');
+
+        checkboxes.forEach(checkbox => {
+            totalObat += parseInt(checkbox.dataset.harga);
+        });
+
+        const totalKeseluruhan = DEFAULT_BIAYA_PERIKSA + totalObat;
+        document.getElementById('totalBiaya').textContent = formatRupiah(totalKeseluruhan);
+    }
+
     function bukaModal(poliId, namaPasien) {
         const modal = document.getElementById('modalPemeriksaan');
         document.getElementById('modalNamaPasien').textContent = `Pemeriksaan - ${namaPasien}`;
         document.getElementById('modalPoliId').value = poliId;
+
+        // Reset checkbox dan hitung ulang biaya saat modal dibuka
+        const checkboxes = document.querySelectorAll('input[name="obat_ids[]"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false; // Uncheck all checkboxes
+        });
+        hitungTotalBiaya(); // Initial calculation when modal opens
+
         modal.style.display = 'flex';
     }
 
@@ -148,12 +181,22 @@
         document.getElementById('modalPemeriksaan').style.display = 'none';
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         const modal = document.getElementById('modalPemeriksaan');
         if (event.target === modal) {
             modal.style.display = "none";
         }
     }
+
+    // Tambahkan event listener untuk setiap checkbox obat
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkboxes = document.querySelectorAll('input[name="obat_ids[]"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', hitungTotalBiaya);
+        });
+        // Initial calculation when the page loads, in case there are checked items from old('obat_ids')
+        hitungTotalBiaya();
+    });
 </script>
 <style>
     .modal {
