@@ -77,7 +77,7 @@
                 </div>
             </a>
 
-            <a href="#" class="stat-card info">
+            <a href="{{ Route('dokter.update') }}" class="stat-card info">
                 <div class="stat-header">
                     <div class="stat-icon">
                         <i class="fas fa-user-cog"></i>
