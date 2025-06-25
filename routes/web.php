@@ -39,7 +39,7 @@ Route::prefix('dokter')
         Route::get('/riwayat-periksa', [PeriksaController::class, 'riwayat'])->name('riwayat.index');
         Route::post('/periksa', [PeriksaController::class, 'store'])->name('periksa.store');
         Route::post('/create/jadwal-periksa', [JadwalPeriksaController::class, 'store'])->name('jadwal.store');
-        Route::get('/update-profile', [DokterController::class, 'update'])->name('update');
-        Route::put('/update-profile/store', [DokterController::class, 'updateProfile'])->name('updateProfile');
+        Route::get('/profile', [DokterController::class, 'update'])->name('profile.edit');
+        Route::put('/profile', [DokterController::class, 'updateProfile'])->name('profile.store');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout'); // Proses logout
     });

@@ -12,6 +12,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model; // Tetap diperlukan untuk tipe hint Model
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PasienResource extends Resource
@@ -29,31 +30,39 @@ class PasienResource extends Resource
     {
         return $form
             ->schema([
+                // Menggunakan Forms\Components\Group dengan relationship() untuk data User
                 Forms\Components\Section::make('Data Akun')
                     ->description('Masukkan informasi login pasien.')
                     ->schema([
-                        Forms\Components\TextInput::make('user.name')
-                            ->label('Nama Lengkap')
-                            ->placeholder('Contoh: Ahmad Ramadhan')
-                            ->required()
-                            ->maxLength(255),
+                        Forms\Components\Group::make()
+                            ->relationship('user')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nama Lengkap')
+                                    ->placeholder('Contoh: Ahmad Ramadhan')
+                                    ->maxLength(255)
+                                    ->required(),
 
-                        Forms\Components\TextInput::make('user.email')
-                            ->label('Email')
-                            ->placeholder('contoh@email.com')
-                            ->email()
-                            ->required()
-                            ->unique(User::class, 'email', fn($record) => $record)
-                            ->maxLength(255),
+                                Forms\Components\TextInput::make('email')
+                                    ->label('Email')
+                                    ->placeholder('contoh@email.com')
+                                    ->email()
+                                    ->unique(User::class, 'email', ignoreRecord: true)
+                                    ->maxLength(255)
+                                    ->required(),
 
-                        Forms\Components\TextInput::make('user.password')
-                            ->label('Kata Sandi')
-                            ->placeholder('Minimal 8 karakter')
-                            ->password()
-                            ->minLength(8)
-                            ->required(),
-                    ])
-                    ->columns(2),
+                                Forms\Components\TextInput::make('password')
+                                    ->label('Kata Sandi')
+                                    ->placeholder('Kosongkan jika tidak ingin ubah')
+                                    ->password()
+                                    ->minLength(8)
+                                    ->dehydrateStateUsing(fn(string $state): string => bcrypt($state))
+                                    ->dehydrated(fn(?string $state): bool => filled($state))
+                                    ->required(fn(string $operation): bool => $operation === 'create')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('Password minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.'),
+                            ])->columns(2),
+                    ]),
 
                 Forms\Components\Section::make('Data Pasien')
                     ->description('Masukkan informasi pribadi pasien.')
@@ -62,7 +71,7 @@ class PasienResource extends Resource
                             ->label('No. KTP')
                             ->placeholder('Contoh: 327508xxxxxxx')
                             ->required()
-                            ->unique(\App\Models\Pasien::class, 'no_ktp', fn($record) => $record)
+                            ->unique(Pasien::class, 'no_ktp', fn($record) => $record)
                             ->maxLength(20),
 
                         Forms\Components\TextInput::make('no_hp')
@@ -135,6 +144,7 @@ class PasienResource extends Resource
             ->emptyStateDescription('Klik tombol "Tambah Pasien" untuk menambahkan data baru.')
             ->actions([
                 Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -143,6 +153,11 @@ class PasienResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+
+        return parent::getEloquentQuery()->with('user');
+    }
 
     public static function getRelations(): array
     {
@@ -159,8 +174,10 @@ class PasienResource extends Resource
             'edit' => Pages\EditPasien::route('/{record}/edit'),
         ];
     }
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
     }
 }
+

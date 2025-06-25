@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\DokterResource\Pages;
 use App\Filament\Resources\DokterResource\RelationManagers;
 use App\Models\Dokter;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,10 +13,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Card;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\Model;
 
 class DokterResource extends Resource
 {
@@ -28,42 +29,54 @@ class DokterResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-user';
 
-
-
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Card::make()
-                    ->columns(2)
+                Forms\Components\Section::make('Data Akun')
+                    ->description('Masukkan informasi login dokter.')
                     ->schema([
-                        Forms\Components\TextInput::make('user.name')
-                            ->label('Nama Dokter')
-                            ->helperText('Masukkan nama lengkap dokter')
-                            ->required()
-                            ->maxLength(255),
+                        Forms\Components\Group::make()
+                            ->relationship('user')
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->label('Nama Dokter')
+                                    ->helperText('Masukkan nama lengkap dokter')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->default(fn($record) => $record?->user?->name),
 
-                        Forms\Components\TextInput::make('user.email')
-                            ->label('Email')
-                            ->helperText('Email yang digunakan untuk login')
-                            ->email()
-                            ->required()
-                            ->maxLength(255),
+                                Forms\Components\TextInput::make('email')
+                                    ->label('Email')
+                                    ->helperText('Email yang digunakan untuk login')
+                                    ->email()
+                                    ->unique(User::class, 'email', ignoreRecord: true)
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->default(fn($record) => $record?->user?->email),
 
-                        Forms\Components\TextInput::make('user.password')
-                            ->label('Password')
-                            ->helperText('Minimal 8 karakter')
-                            ->password()
-                            ->minLength(8)
-                            ->required()
-                            ->visible(fn($livewire) => $livewire instanceof \Filament\Resources\Pages\CreateRecord),
+                                Forms\Components\TextInput::make('password')
+                                    ->label('Password')
+                                    ->helperText('Minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.')
+                                    ->password()
+                                    ->minLength(8)
+                                    ->dehydrateStateUsing(fn(string $state): string => bcrypt($state))
+                                    ->dehydrated(fn(?string $state): bool => filled($state))
+                                    ->required(fn(string $operation): bool => $operation === 'create')
+                                    ->hintIcon('heroicon-m-information-circle')
+                                    ->hintIconTooltip('Password minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.')
+                                    ->default(fn($record) => $record?->user?->password),
+                            ])->columns(2)
+                    ]),
 
+                Forms\Components\Section::make('Data Dokter')
+                    ->description('Masukkan informasi pribadi dokter dan poli tugas.')
+                    ->schema([
                         Forms\Components\TextInput::make('alamat')
                             ->label('Alamat')
                             ->helperText('Masukkan alamat tempat tinggal dokter')
                             ->required()
                             ->columnSpan(2),
-
                         Forms\Components\TextInput::make('no_hp')
                             ->label('No. HP')
                             ->helperText('Nomor telepon aktif')
@@ -75,11 +88,11 @@ class DokterResource extends Resource
                             ->label('Poli')
                             ->helperText('Pilih poli tempat dokter bertugas')
                             ->required()
-                            ->relationship('poli', 'nama_poli')
+                            ->relationship('poli', 'nama_poli'),
                     ])
+                    ->columns(2),
             ]);
     }
-
 
     public static function table(Table $table): Table
     {
@@ -130,6 +143,12 @@ class DokterResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        // Penting: eager load relasi 'user' untuk tampilan tabel
+        return parent::getEloquentQuery()->with('user');
+    }
+
     public static function getRelations(): array
     {
         return [
@@ -145,6 +164,7 @@ class DokterResource extends Resource
             'edit' => Pages\EditDokter::route('/{record}/edit'),
         ];
     }
+
     public static function getNavigationBadge(): ?string
     {
         return static::getModel()::count();
