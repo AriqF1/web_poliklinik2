@@ -99,7 +99,7 @@
                 </h3>
             </div>
             <div class="form-container">
-                <form action="{{ route('dokter.updateProfile') }}" method="POST">
+                <form action="{{ route('dokter.profile.store') }}" method="POST">
                     @csrf
                     @method('PUT')
 
