@@ -17,6 +17,7 @@ use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash; // Penting: Import Hash facade
 
 class DokterResource extends Resource
 {
@@ -37,35 +38,38 @@ class DokterResource extends Resource
                     ->description('Masukkan informasi login dokter.')
                     ->schema([
                         Forms\Components\Group::make()
-                            ->relationship('user')
+                            ->relationship('user') // Filament akan mengisi field ini dari relasi user
                             ->schema([
                                 Forms\Components\TextInput::make('name')
                                     ->label('Nama Dokter')
                                     ->helperText('Masukkan nama lengkap dokter')
                                     ->required()
-                                    ->maxLength(255)
-                                    ->default(fn($record) => $record?->user?->name),
+                                    ->maxLength(255),
 
                                 Forms\Components\TextInput::make('email')
                                     ->label('Email')
                                     ->helperText('Email yang digunakan untuk login')
                                     ->email()
+                                    // Validasi unik email di tabel 'users',
+                                    // ignoreRecord: true penting saat mengedit agar email lama tidak dianggap duplikat.
                                     ->unique(User::class, 'email', ignoreRecord: true)
                                     ->required()
-                                    ->maxLength(255)
-                                    ->default(fn($record) => $record?->user?->email),
+                                    ->maxLength(255),
 
                                 Forms\Components\TextInput::make('password')
                                     ->label('Password')
                                     ->helperText('Minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.')
                                     ->password()
+                                    ->revealable()
                                     ->minLength(8)
-                                    ->dehydrateStateUsing(fn(string $state): string => bcrypt($state))
+                                    // Menggunakan Hash::make() untuk mengenkripsi password sebelum disimpan.
+                                    ->dehydrateStateUsing(fn(string $state): string => Hash::make($state))
+                                    // Hanya simpan password jika field ini diisi (saat create atau saat user mengubah password).
                                     ->dehydrated(fn(?string $state): bool => filled($state))
+                                    // Password wajib hanya saat operasi 'create' (membuat dokter baru).
                                     ->required(fn(string $operation): bool => $operation === 'create')
                                     ->hintIcon('heroicon-m-information-circle')
-                                    ->hintIconTooltip('Password minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.')
-                                    ->default(fn($record) => $record?->user?->password),
+                                    ->hintIconTooltip('Password minimal 8 karakter. Kosongkan jika tidak ingin mengubah password.'),
                             ])->columns(2)
                     ]),
 
@@ -145,7 +149,6 @@ class DokterResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        // Penting: eager load relasi 'user' untuk tampilan tabel
         return parent::getEloquentQuery()->with('user');
     }
 
